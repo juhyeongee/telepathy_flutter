@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>811875210646-v7hsci2cldrtef85qdfl4p048hegqgv8.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.811875210646-v7hsci2cldrtef85qdfl4p048hegqgv8</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC7E0x2pvTza-ZD5A3FyEdmFB2MP8pzXKM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>811875210646</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>cero.telepathy.telepathyFlutter</string>
+	<key>PROJECT_ID</key>
+	<string>telepathy-flutter</string>
+	<key>STORAGE_BUCKET</key>
+	<string>telepathy-flutter.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:811875210646:ios:f96cce3c7e2573f707f9b7</string>
+</dict>
+</plist>

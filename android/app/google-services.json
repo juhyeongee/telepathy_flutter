@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "811875210646",
+    "project_id": "telepathy-flutter",
+    "storage_bucket": "telepathy-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:811875210646:android:0798a51c1e6d2fbf07f9b7",
+        "android_client_info": {
+          "package_name": "cero.telepathy.telepathy_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "811875210646-e1ufd9hhuh362ng186th87hnlqqaluvb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cero.telepathy.telepathy_flutter",
+            "certificate_hash": "2a7f8c5db19734a57e10db05c89b1dc659b35c76"
+          }
+        },
+        {
+          "client_id": "811875210646-6ulkd7cdijp6bcnka2iueoldbg8ff7he.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNS0oOyI61vUymi7KVd6XGlQEso9j5S2Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "811875210646-6ulkd7cdijp6bcnka2iueoldbg8ff7he.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "811875210646-v7hsci2cldrtef85qdfl4p048hegqgv8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "cero.telepathy.telepathyFlutter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
