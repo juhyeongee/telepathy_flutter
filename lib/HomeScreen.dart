@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:telepathy_flutter/kakao_login.dart';
+import 'package:telepathy_flutter/main_view_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
