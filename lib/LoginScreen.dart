@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:telepathy_flutter/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,30 +11,37 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("LoginScreen")),
-        body: Column(children: [
-          Text("Email"),
-          TextField(
-            obscureText: false,
-            decoration: InputDecoration(
-                border: OutlineInputBorder(), labelText: 'Email'),
-          ),
-          Text("Password "),
-          TextField(
-            obscureText: true,
-            decoration: InputDecoration(
-                border: OutlineInputBorder(), labelText: 'Password'),
-          ),
-          GestureDetector(
-              onTap: () {
-                AuthService().signInWithGoogle();
-              },
-              child: Container(
-                  child: Text("Let's Google LogIn, Click this",
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          backgroundColor: Colors.pink, fontSize: 25))))
-        ]));
+        backgroundColor: Color(0xff1A1A22),
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("TELEPATHY",
+                    style: TextStyle(
+                        fontSize: 50,
+                        fontFamily: "neodgm",
+                        color: Color(0xff72D4A5))),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber,
+                      foregroundColor: Colors.black),
+                  onPressed: () {
+                    print("kakao Login");
+                  },
+                  child: Text(
+                    "카카오톡 로그인하기",
+                  ),
+                )
+                //
+                // TextField(
+                //   obscureText: false,
+                //   decoration: InputDecoration(
+                //       border: OutlineInputBorder(), labelText: 'Email'),
+                // ),
+              ]),
+        ));
     ;
   }
 }

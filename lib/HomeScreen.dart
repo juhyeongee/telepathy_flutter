@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'auth_service.dart';
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -21,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              FirebaseAuth.instance.currentUser!.displayName!,
+              "ㄴㅇㄹ",
               style: const TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
@@ -40,18 +38,9 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 30,
             ),
-            MaterialButton(
-              padding: const EdgeInsets.all(10),
-              color: Colors.green,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
-              child: const Text(
-                'LOG OUT',
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ),
-              onPressed: () {
-                AuthService().signOut();
-              },
+            const Text(
+              'LOG OUT',
+              style: TextStyle(color: Colors.white, fontSize: 15),
             ),
           ],
         ),
