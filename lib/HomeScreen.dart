@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:telepathy_flutter/kakao_login.dart';
 import 'package:telepathy_flutter/main_view_model.dart';
@@ -31,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 10,
             ),
             Text(
-              FirebaseAuth.instance.currentUser!.email!,
+              "ㅇㅇㅇ",
               style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
