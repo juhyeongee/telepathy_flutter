@@ -46,3 +46,4 @@ app.*.map.json
 
 
 kakao_app_key.dart
+firebase_messaging_api_key.dart
