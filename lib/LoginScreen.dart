@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:telepathy_flutter/kakao_login.dart';
 import 'package:telepathy_flutter/main_view_model.dart';
 import 'functions/fcmController/fcmController.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,6 +13,12 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final viewModel = MainViewModel(KakaoLogin());
+  final firestore = FirebaseFirestore.instance;
+
+  getData() async {
+    var result = await firestore.collection('example').doc("exampleDocs").get();
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +79,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   child: Text(
                     "push notification 보내기",
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.redAccent,
+                      foregroundColor: Colors.white),
+                  onPressed: () async {
+                    final result = await getData();
+                    print(result.data());
+                  },
+                  child: Text(
+                    "Firestore 정보 가져오기 ",
                   ),
                 )
                 //
