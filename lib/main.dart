@@ -2,8 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:telepathy_flutter/Intro.dart';
-import 'package:telepathy_flutter/LoginScreen.dart';
+import 'package:telepathy_flutter/screens/Intro/Intro.dart';
+import 'package:telepathy_flutter/screens/LoginScreen.dart';
 import 'firebase_options.dart';
 import 'package:telepathy_flutter/keys.dart';
 import "package:flutter_local_notifications/flutter_local_notifications.dart";
@@ -69,6 +69,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Flutter Demo', home: const LoginScreen());
+    return MaterialApp(title: 'Flutter Demo', home: const IntroScreen());
   }
 }

@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import 'package:telepathy_flutter/LoginScreen.dart';
+import 'package:telepathy_flutter/screens/LoginScreen.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
@@ -11,6 +11,8 @@ class IntroScreen extends StatefulWidget {
 class _IntroScreenState extends State<IntroScreen> {
   @override
   Widget build(BuildContext context) {
+    void initState() {}
+    ;
     return Container(
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         ElevatedButton(

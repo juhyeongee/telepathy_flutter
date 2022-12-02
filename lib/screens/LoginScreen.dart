@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:telepathy_flutter/kakao_login.dart';
 import 'package:telepathy_flutter/main_view_model.dart';
-import 'functions/fcmController/fcmController.dart';
+import '../functions/fcmController/fcmController.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+final eunjoo = Provider((ref) {
+  return "cch";
+});
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
