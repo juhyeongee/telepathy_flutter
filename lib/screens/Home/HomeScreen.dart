@@ -18,28 +18,28 @@ class _HomeScreenState extends State<HomeScreen> {
         width: MediaQuery.of(context).size.width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: const [
             Text(
               "ㄴㅇㄹ",
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87),
             ),
-            const SizedBox(
+            SizedBox(
               height: 10,
             ),
             Text(
               "ㅇㅇㅇ",
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87),
             ),
-            const SizedBox(
+            SizedBox(
               height: 30,
             ),
-            const Text(
+            Text(
               'LOG OUT',
               style: TextStyle(color: Colors.white, fontSize: 15),
             ),

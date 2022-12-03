@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:telepathy_flutter/screens/Intro/Intro.dart';
 import 'package:telepathy_flutter/screens/LoginScreen.dart';
@@ -66,9 +67,18 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  GoRouter get _router => GoRouter(
+      routes: [GoRoute(path: "/", builder: (_, state) => IntroScreen())]);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Flutter Demo', home: const IntroScreen());
+    return MaterialApp.router(
+      //라우트 정보전달
+      routeInformationProvider: _router.routeInformationProvider,
+      //URI String을 상태 및 Go router에서 사용할 수 있는 형태로 변환해주는 함수
+      routeInformationParser: _router.routeInformationParser,
+      // 위에서 변경된 값으로 실제 어떤 라우트를 보여줄지 정하는 함수
+      routerDelegate: _router.routerDelegate,
+    );
   }
 }
