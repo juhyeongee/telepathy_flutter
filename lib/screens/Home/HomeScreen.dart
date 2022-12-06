@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telepathy_flutter/kakao_login.dart';
 import 'package:telepathy_flutter/main_view_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final myController = TextEditingController();
+  final firestore = FirebaseFirestore.instance;
 
   void initState() {
     super.initState();
@@ -22,6 +24,31 @@ class _HomeScreenState extends State<HomeScreen> {
     print("Second text field: ${myController.text}");
   }
 
+  getMyMessage() async {
+    var result =
+        await firestore.collection('messageData').doc("01053618962").get();
+    return result;
+  }
+
+  setMyNewMessage() {
+    firestore
+        .collection("messageData")
+        .doc("01053618962")
+        .set({"to": "01011111111", "from": "010", "message": "코드로 보내본 메세지"});
+  }
+
+  //같은 doc으로 보내면, 초기화가 됨
+  updateMyNewMessage() {
+    firestore.collection("messageData").doc("01053618962").set(
+        {"to": "01033333333", "from": "01022222222", "message": "update"},
+        SetOptions(merge: true));
+  }
+
+// updateMyNewMessage() {
+//     firestore.collection("messageData").doc("01053618962").update(
+//       {"to": "01033333333", "from": "01077777777", "message": "update Method"},
+//     );
+//   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +77,11 @@ class _HomeScreenState extends State<HomeScreen> {
               controller: myController,
             ),
           ),
-          ElevatedButton(onPressed: () {}, child: Text("암거니"))
+          ElevatedButton(
+              onPressed: setMyNewMessage, child: Text("SendMessage")),
+          ElevatedButton(onPressed: getMyMessage, child: Text("getMyMessage")),
+          ElevatedButton(
+              onPressed: updateMyNewMessage, child: Text("updateMessage"))
         ]),
       ),
     );

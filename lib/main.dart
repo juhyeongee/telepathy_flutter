@@ -19,7 +19,11 @@ late AndroidNotificationChannel channel;
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 void main() async {
+  /* 카카오 init 로직 */
   KakaoSdk.init(nativeAppKey: KAKAO_APP_KEY);
+
+  /* Firebase init 로직 */
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -63,6 +67,9 @@ void main() async {
   final token = await FirebaseMessaging.instance.getToken();
 
   print("token : ${token ?? 'token NULL!'}");
+
+  /* 맨 처음 초기화 시켜주기  */
+
   runApp(MyApp());
 }
 
@@ -70,7 +77,7 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
 
   final _router = GoRouter(
-    initialLocation: '/HomeScreen',
+    initialLocation: '/',
     errorBuilder: (context, state) {
       return Container(
         child: Text("errer"),
@@ -89,7 +96,7 @@ class MyApp extends StatelessWidget {
               builder: (_, state) => IntroScreen(),
             )
           ]),
-      GoRoute(path: "/HomeScreen", builder: (_, state) => HomeScreen())
+      GoRoute(path: "/homeScreen", builder: (_, state) => HomeScreen())
       // GoRoute(path: "/Intro", builder: (_, state) => IntroScreen()),
       // GoRoute(path: "/Home", builder: (_, state) => HomeScreen())
     ],
