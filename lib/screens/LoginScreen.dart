@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:telepathy_flutter/kakao_login.dart';
 import 'package:telepathy_flutter/main_view_model.dart';
 import '../functions/fcmController/fcmController.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-final eunjoo = Provider((ref) {
-  return "cch";
-});
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -40,13 +38,27 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontSize: 50,
                         fontFamily: "neodgm",
                         color: Color(0xff72D4A5))),
+                Text("Login Screen",
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontFamily: "neodgm",
+                        color: Color(0xff72D4A5))),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white),
+                  onPressed: () {
+                    context.go('/yes');
+                    print("읽히나?");
+                  },
+                  child: Text(
+                    "로그인 후 다음 화면 ",
+                  ),
+                ),
                 // Image.network(
                 //     viewModel.user?.kakaoAccount?.profile?.profileImageUrl ??
                 //         ""),
-                Text(
-                  '${viewModel.isLoggedIn}',
-                  style: TextStyle(color: Colors.white10),
-                ),
+
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.amber,
@@ -80,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         userToken:
                             "cfZ8XEdQq0AfkOSRjb7qRm:APA91bGCd0M7wmY-4W3YbAtt_iLizXy_qmmVuQy3abQ7Wmz96eiyydgFCrDxGssawOJpKnhAZlnqJjFRWou5BIuEY7Mwj_D-epHMQLdjIvC1IOFJ--4N4gb4G_7e5F9SGuODDK-BbUJG",
                         title: "테스트 메세지",
-                        body: "임시 메세지 입니다");
+                        body: "임시 메세지 입니다🚀");
                   },
                   child: Text(
                     "push notification 보내기",

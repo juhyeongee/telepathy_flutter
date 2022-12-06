@@ -16,16 +16,22 @@ class _IntroScreenState extends State<IntroScreen> {
       super.initState();
     }
 
+    final router = GoRouter.of(context);
+
     return Container(
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text(router.location,
+            style: TextStyle(
+                fontSize: 30, fontFamily: "neodgm", color: Color(0xff72D4A5))),
         ElevatedButton(
             onPressed: () {
               // Navigator.of(context).push(MaterialPageRoute(
               //     builder: (BuildContext context) => LoginScreen()));
               context.pop();
+
               // => goRouter를 통해 간단하게 이렇게 라우팅 로직을 바꿔줄 수 있습니다. 전 화면으로 가는 건 POP
             },
-            child: Text("아무키나 눌러주세요")),
+            child: Text("pop")),
       ]),
     );
   }

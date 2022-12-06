@@ -9,6 +9,8 @@ import 'firebase_options.dart';
 import 'package:telepathy_flutter/keys.dart';
 import "package:flutter_local_notifications/flutter_local_notifications.dart";
 
+import 'screens/Home/HomeScreen.dart';
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message ${message.messageId}');
 }
@@ -61,19 +63,42 @@ void main() async {
   final token = await FirebaseMessaging.instance.getToken();
 
   print("token : ${token ?? 'token NULL!'}");
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
-  GoRouter get _router => GoRouter(
-      routes: [GoRoute(path: "/", builder: (_, state) => IntroScreen())]);
+  final _router = GoRouter(
+    initialLocation: '/HomeScreen',
+    errorBuilder: (context, state) {
+      return Container(
+        child: Text("errer"),
+      );
+    },
+    routes: [
+      GoRoute(
+          path: "/",
+          builder: (_, state) {
+            return LoginScreen();
+          },
+          routes: [
+            GoRoute(
+              path: "intro",
+              name: "intro",
+              builder: (_, state) => IntroScreen(),
+            )
+          ]),
+      GoRoute(path: "/HomeScreen", builder: (_, state) => HomeScreen())
+      // GoRoute(path: "/Intro", builder: (_, state) => IntroScreen()),
+      // GoRoute(path: "/Home", builder: (_, state) => HomeScreen())
+    ],
+  );
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      //라우트 정보전달
+      //라우트 정보전달: 여기에 이렇게 해놓으면, GoRoute만 신경쓰면 된다
       routeInformationProvider: _router.routeInformationProvider,
       //URI String을 상태 및 Go router에서 사용할 수 있는 형태로 변환해주는 함수
       routeInformationParser: _router.routeInformationParser,
