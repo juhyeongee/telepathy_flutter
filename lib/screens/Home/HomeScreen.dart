@@ -44,11 +44,18 @@ class _HomeScreenState extends State<HomeScreen> {
         SetOptions(merge: true));
   }
 
-// updateMyNewMessage() {
-//     firestore.collection("messageData").doc("01053618962").update(
-//       {"to": "01033333333", "from": "01077777777", "message": "update Method"},
-//     );
-//   }
+  // 방법 3개 다 doc안에 내용이 포개어 지는데? 다 업데이트 되어버림 추가로 add가 되지 않고
+  // 내려받아 와서, spread 문법으로 다시 추가해서 update해주는 방향으로
+  // updateMyNewMessage() {
+  //   firestore.collection("messageData").doc("01053618962").set(
+  //       {"to": "01033333333", "from": "01022222222", "message": "update"},
+  //       );
+  // }
+  // updateMyNewMessage() {
+  //     firestore.collection("messageData").doc("01053618962").update(
+  //       {"to": "01033333333", "from": "01077777777", "message": "update Method"},
+  //     );
+  //   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

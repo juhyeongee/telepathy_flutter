@@ -10,33 +10,55 @@ class IntroScreen extends StatefulWidget {
 }
 
 class _IntroScreenState extends State<IntroScreen> {
+  int screenNumber = 0;
+  void initState() {
+    setState(() {
+      screenNumber = 0;
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    void initState() {
-      super.initState();
-    }
-
     final router = GoRouter.of(context);
+
+    final introTextList = [
+      "치직 이곳은 끝없는 우주",
+      "저 멀리 당신의 행성이 보입니다",
+      "드넓은 우주에서 당신은 누군가의 연결을 기다리고 있습니다",
+      "당신만의 행성을 만들고 다른 행성으로 교신을 시도하세요"
+    ];
 
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       color: Colors.black,
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("Intro Screen입니다",
-                style: TextStyle(
-                    fontSize: 60,
-                    fontFamily: "neodgm",
-                    color: Color(0xff72D4A5))),
-            ElevatedButton(
-                onPressed: () {
-                  context.go("/homeScreen");
-                },
-                child: Text("HomeScreen"))
-          ]),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(introTextList[screenNumber],
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: "neodgm",
+                      color: Color(0xff72D4A5))),
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      if (introTextList[screenNumber] == 3) {
+                        context.go("/homeScreen");
+                      } else {
+                        print(screenNumber);
+                        screenNumber++;
+                      }
+                    });
+                  },
+                  child: Text("Next"))
+            ]),
+      ),
     );
   }
 }
