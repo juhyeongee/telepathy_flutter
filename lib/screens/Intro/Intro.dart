@@ -30,10 +30,11 @@ class _IntroScreenState extends State<IntroScreen> {
       "당신만의 행성을 만들고 다른 행성으로 교신을 시도하세요"
     ];
 
-    return Container(
+    return Scaffold(
+        body: Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      color: Colors.black,
+      color: Color(0xff1E1831),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -41,7 +42,7 @@ class _IntroScreenState extends State<IntroScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(introTextList[screenNumber],
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 18,
                       fontFamily: "neodgm",
                       color: Color(0xff72D4A5))),
@@ -59,6 +60,6 @@ class _IntroScreenState extends State<IntroScreen> {
                   child: Text("Next"))
             ]),
       ),
-    );
+    ));
   }
 }
