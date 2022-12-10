@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           backgroundColor: Colors.black,
                           foregroundColor: Colors.white),
                       onPressed: () {
-                        context.go('/intro');
+                        context.go('/homeScreen');
                         print("읽히나?");
                       },
                       child: Text(
