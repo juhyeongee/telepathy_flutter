@@ -41,18 +41,20 @@ class _IntroScreenState extends State<IntroScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(introTextList[screenNumber],
-                  style: const TextStyle(
-                      fontSize: 18,
-                      fontFamily: "neodgm",
-                      color: Color(0xff72D4A5))),
+              Text(
+                screenNumber < 4 ? introTextList[screenNumber] : "",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontFamily: "neodgm",
+                  color: Color(0xff72D4A5),
+                ),
+              ),
               ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      if (introTextList[screenNumber] == 3) {
-                        context.go("/homeScreen");
+                      if (screenNumber == 3) {
+                        context.go("/HomeScreen");
                       } else {
-                        print(screenNumber);
                         screenNumber++;
                       }
                     });
