@@ -37,6 +37,21 @@ Future<Object?> getMySentMessage() async {
   return messageBody;
 }
 
+Future<List> getMySentMessageList() async {
+  final List mySentMessageList = [];
+  QuerySnapshot result = await firestore
+      .collection('messageData')
+      .doc("01053618962")
+      .collection("sentMessage")
+      .get();
+  result.docs.forEach((doc) {
+    mySentMessageList.add(doc["body"]);
+  });
+
+  print("사이즈 ${mySentMessageList}");
+  return mySentMessageList;
+}
+
 class MailBoxScreen extends StatefulWidget {
   const MailBoxScreen({super.key});
 
@@ -49,6 +64,7 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
 
   void initState() {
     super.initState();
+    getMySentMessageList();
   }
 
   getMyMessage() async {
@@ -105,7 +121,7 @@ class _SentMessageBoxesState extends State<SentMessageBoxes> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getMySentMessage(),
+      future: getMySentMessageList(),
       builder: (context, snapshot) {
         if (snapshot.hasData == false) {
           return CircularProgressIndicator();
@@ -122,8 +138,13 @@ class _SentMessageBoxesState extends State<SentMessageBoxes> {
         }
         // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
         else {
-          return MessageContainer(
-            result: snapshot.data,
+          return Column(
+            children: [
+              for (var sentMessage in snapshot.data!)
+                MessageContainer(
+                  result: sentMessage,
+                )
+            ],
           );
         }
       },
