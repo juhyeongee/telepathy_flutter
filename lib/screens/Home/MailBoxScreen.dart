@@ -87,24 +87,26 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(children: <Widget>[
-          Text(
-            "보낸 메세지",
-            style: TextStyle(color: Colors.white, fontSize: 30),
-          ),
-          SentMessageBoxes(),
-          Text(
-            "받은 메세지",
-            style: TextStyle(color: Colors.white, fontSize: 30),
-          ),
-          ReceivedMessageBoxes(),
-          //  텍스트 필드. 텍스트필드에 controller를 등록하여 리스너를 통한 핸들링
-          ElevatedButton(
-              onPressed: routeToWriteMessagingScreen,
-              child: Text("메세지 보내러 가기")),
-        ]),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(children: <Widget>[
+            Text(
+              "보낸 메세지",
+              style: TextStyle(color: Colors.white, fontSize: 30),
+            ),
+            SentMessageBoxes(),
+            Text(
+              "받은 메세지",
+              style: TextStyle(color: Colors.white, fontSize: 30),
+            ),
+            ReceivedMessageBoxes(),
+            //  텍스트 필드. 텍스트필드에 controller를 등록하여 리스너를 통한 핸들링
+            ElevatedButton(
+                onPressed: routeToWriteMessagingScreen,
+                child: Text("메세지 보내러 가기")),
+          ]),
+        ),
       ),
     );
   }
@@ -208,28 +210,22 @@ class MessageContainer extends StatelessWidget {
       child: Padding(
         padding:
             const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  "010-3008-8962",
-                  style: TextStyle(
-                      fontFamily: "neodgm",
-                      color: Color(0xff72D4A5),
-                      fontSize: 14),
-                ),
-                Text(
-                  "$result",
-                  style: TextStyle(
-                      fontFamily: "neodgm",
-                      color: Color(0xff72D4A5),
-                      fontSize: 16),
-                )
-              ],
+            Text(
+              "010-3008-8962",
+              style: TextStyle(
+                  fontFamily: "neodgm", color: Color(0xff72D4A5), fontSize: 14),
             ),
+            Text(
+              "$result",
+              style: TextStyle(
+                  fontFamily: "neodgm", color: Color(0xff72D4A5), fontSize: 16),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            )
           ],
         ),
       ),

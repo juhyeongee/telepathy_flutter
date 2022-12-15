@@ -18,57 +18,61 @@ class WritingMessageScreen extends StatelessWidget {
     }
 
     //같은 doc으로 보내면, 초기화가 됨
-    updateMyNewMessage() {
-      firestore
+    void updateMyNewMessage() async {
+      await firestore
           .collection("messageData")
           .doc("01053618962")
           .collection("sentMessage")
           .doc("${phoneNumberTextController}")
           .set({"body": messageTextController.text});
+      Navigator.pop(context);
     }
 
     return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(
-            height: 100,
-            child: TextField(
-              style: TextStyle(fontSize: 20, color: Colors.white),
-              decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 100,
+              child: TextField(
+                style: TextStyle(fontSize: 20, color: Colors.black),
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                   hintText: '전화번호 적는 곳',
                   filled: true,
-                  fillColor: Colors.black54),
-              maxLines: 40, // <-- SEE HERE
-              minLines: 30,
+                ),
+                maxLines: 40, // <-- SEE HERE
+                minLines: 30,
 
-              // 컨트롤러에 필드 messageTextController를 부여
-              controller: phoneNumberTextController,
+                // 컨트롤러에 필드 messageTextController를 부여
+                controller: phoneNumberTextController,
+              ),
             ),
-          ),
-          SizedBox(
-            height: 400,
-            child: TextField(
-              style: TextStyle(fontSize: 20, color: Colors.white),
-              decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
+            SizedBox(
+              height: 300,
+              child: TextField(
+                style: TextStyle(fontSize: 20, color: Colors.black),
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                   hintText: '진심으로 텔레파시를 보내보아요',
                   filled: true,
-                  fillColor: Colors.black54),
-              maxLines: 40, // <-- SEE HERE
-              minLines: 30,
+                ),
+                maxLines: 40, // <-- SEE HERE
+                minLines: 30,
 
-              // 컨트롤러에 필드 messageTextController를 부여
-              controller: messageTextController,
+                // 컨트롤러에 필드 messageTextController를 부여
+                controller: messageTextController,
+              ),
             ),
-          ),
-          ElevatedButton(
-              onPressed: updateMyNewMessage, child: Text("updateMessage"))
-        ],
+            ElevatedButton(
+                onPressed: updateMyNewMessage, child: Text("메세지 보내기"))
+          ],
+        ),
       ),
     );
   }
