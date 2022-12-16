@@ -11,6 +11,7 @@ class IntroScreen extends StatefulWidget {
 
 class _IntroScreenState extends State<IntroScreen> {
   int screenNumber = 0;
+
   void initState() {
     setState(() {
       screenNumber = 0;
@@ -32,13 +33,7 @@ class _IntroScreenState extends State<IntroScreen> {
 
     return Scaffold(
         body: Container(
-      decoration: BoxDecoration(
-        color: const Color(0xff1E1831),
-        // image: DecorationImage(
-        //   image: AssetImage('assets/images/star1.png'),
-        //   fit: BoxFit.cover,
-        // ),
-      ),
+      decoration: getBackground(screenNumber),
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       child: Padding(
@@ -51,7 +46,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 screenNumber < 4 ? introTextList[screenNumber] : "",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 22,
                   fontFamily: "neodgm",
                   height: 1.5,
                   color: Color(0xff72D4A5),
@@ -64,7 +59,7 @@ class _IntroScreenState extends State<IntroScreen> {
                   backgroundColor: MaterialStateProperty.all(
                       const Color.fromRGBO(114, 212, 165, 0.1)),
                   side: MaterialStateProperty.all(
-                      const BorderSide(color: Colors.white, width: 1)),
+                      const BorderSide(color: Colors.white, width: 2)),
                 ),
                 onPressed: () {
                   setState(() {
@@ -78,7 +73,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 child: const Text(
                   "NEXT",
                   style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 24,
                     fontFamily: "neodgm",
                     color: Color(0xff72D4A5),
                   ),
@@ -87,5 +82,21 @@ class _IntroScreenState extends State<IntroScreen> {
             ]),
       ),
     ));
+  }
+
+  BoxDecoration getBackground(int screenNumber) {
+    List<String> arr = [
+      'assets/images/intro1.png',
+      'assets/images/intro2.png',
+      'assets/images/intro3.png',
+      'assets/images/intro4.png'
+    ];
+    return BoxDecoration(
+      color: Color(0xff1E1831),
+      image: DecorationImage(
+        image: AssetImage(arr[screenNumber]),
+        fit: BoxFit.contain,
+      ),
+    );
   }
 }
