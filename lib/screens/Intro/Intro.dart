@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:go_router/go_router.dart';
+import 'package:telepathy_flutter/kakao_login.dart';
 import 'package:telepathy_flutter/screens/LoginScreen.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -64,7 +65,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 onPressed: () {
                   setState(() {
                     if (screenNumber == 3) {
-                      context.go("/HomeScreen");
+                      KakaoLogin().login();
                     } else {
                       screenNumber++;
                     }
