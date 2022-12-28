@@ -34,48 +34,137 @@ class WritingMessageScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      body: Center(
+      backgroundColor: Color(0xff1E1831),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              height: 100,
-              child: TextField(
-                style: TextStyle(fontSize: 20, color: Colors.black),
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  hintText: '전화번호 적는 곳',
-                  filled: true,
+            Padding(
+              padding: const EdgeInsets.only(top: 20, bottom: 10),
+              child: Text(
+                "보내기",
+                style: TextStyle(
+                  color: Color(0xff72D4A5),
+                  fontFamily: "neodgm",
+                  fontSize: 20,
                 ),
-                maxLines: 40, // <-- SEE HERE
-                minLines: 30,
-
-                // 컨트롤러에 필드 messageTextController를 부여
-                controller: phoneNumberTextController,
               ),
             ),
+            Row(
+              children: [
+                Text(
+                  "to.",
+                  style: TextStyle(
+                    color: Color(0xff72D4A5),
+                    fontFamily: "neodgm",
+                    fontSize: 20,
+                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 100,
+                  height: 60,
+                  child: TextField(
+                    style: const TextStyle(
+                      fontFamily: "neodgm",
+                      fontSize: 20,
+                      color: Color(0xff72D4A5),
+                    ),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: '전화번호를 입력하세요',
+                      hintStyle: TextStyle(
+                        color: Color(0xff479871),
+                      ),
+                    ),
+
+                    // decoration: const InputDecoration(
+                    //   enabledBorder: OutlineInputBorder(
+                    //     borderSide: BorderSide(width: 3, color: Color(0xff479871)),
+                    //     borderRadius: BorderRadius.all(Radius.circular(10)),
+                    //   ),
+                    //   focusedBorder: OutlineInputBorder(
+                    //     borderSide: BorderSide(width: 3, color: Color(0xff72D4A5)),
+                    //     borderRadius: BorderRadius.all(Radius.circular(10)),
+                    //   ),
+                    //   hintText: '전화번호 적는 곳',
+                    //   hintStyle: TextStyle(color: Color(0xff479871)),
+                    //   filled: true,
+                    // ),
+                    // maxLines: null, // <-- SEE HERE
+                    // minLines: 20,
+
+                    // 컨트롤러에 필드 messageTextController를 부여
+                    controller: phoneNumberTextController,
+                  ),
+                ),
+              ],
+            ),
             SizedBox(
-              height: 300,
+              height: 500,
               child: TextField(
-                style: TextStyle(fontSize: 20, color: Colors.black),
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
+                style: const TextStyle(
+                    fontFamily: "neodgm",
+                    fontSize: 20,
+                    color: Color(0xff72D4A5)),
+                decoration: const InputDecoration(
+                  fillColor: Color(0xff1E1831),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 3, color: Color(0xff479871)),
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
-                  hintText: '진심으로 텔레파시를 보내보아요',
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 3, color: Color(0xff72D4A5)),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  hintText: '여기에 텔레파시 입력',
+                  hintStyle: TextStyle(color: Color(0xff479871)),
                   filled: true,
                 ),
-                maxLines: 40, // <-- SEE HERE
-                minLines: 30,
+                maxLines: null, // <-- SEE HERE
+                minLines: 70,
 
                 // 컨트롤러에 필드 messageTextController를 부여
                 controller: messageTextController,
               ),
             ),
-            ElevatedButton(
-                onPressed: updateMyNewMessage, child: Text("메세지 보내기"))
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    textStyle: TextStyle(
+                      color: Color(0xff72D4A5),
+                      fontFamily: "neodgm",
+                      fontSize: 20,
+                    ),
+                    backgroundColor: Color(0xff30453B),
+                    minimumSize: Size(40, 50)),
+                onPressed: updateMyNewMessage,
+                child: Text(
+                  "임시저장",
+                  style: TextStyle(color: Color(0xff72D4A5)),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    textStyle: TextStyle(
+                      color: Color(0xff72D4A5),
+                      fontFamily: "neodgm",
+                      fontSize: 20,
+                    ),
+                    backgroundColor: Color(0xff72D4A5),
+                    minimumSize: Size(40, 50)),
+                onPressed: updateMyNewMessage,
+                child: Text(
+                  "메세지 보내기",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
           ],
         ),
       ),

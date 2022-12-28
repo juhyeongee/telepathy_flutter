@@ -20,10 +20,12 @@ class MailBoxScreen extends StatefulWidget {
 }
 
 class _MailBoxScreenState extends State<MailBoxScreen> {
+  bool messeageSwitch = false;
   var myMessage = [];
 
   void initState() {
     super.initState();
+    messeageSwitch = false;
     // getMySentTelepathyList();
   }
 
@@ -42,27 +44,70 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(children: <Widget>[
-            Text(
-              "통한 텔레파시",
-              style: TextStyle(color: Colors.white, fontSize: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    if (messeageSwitch == true)
+                      setState(() {
+                        messeageSwitch = false;
+                      });
+                  },
+                  child: Text(
+                    "받은 텔레파시",
+                    style: TextStyle(
+                      color: messeageSwitch ? Colors.grey : Colors.white,
+                      fontSize: 22,
+                      fontFamily: "neodgm",
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    if (messeageSwitch == false)
+                      setState(() {
+                        messeageSwitch = true;
+                      });
+                  },
+                  child: Text(
+                    "보낸 텔레파시",
+                    style: TextStyle(
+                      color: messeageSwitch ? Colors.white : Colors.grey,
+                      fontSize: 22,
+                      fontFamily: "neodgm",
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 30,
+                  width: 50,
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 30.0,
+                bottom: 30,
+              ),
+              child: Container(
+                color: Colors.grey,
+                height: 1,
+              ),
             ),
             ConnectedTelepathyBoxes(
               sentTelepathies: widget.telepathyInfo["sentTelepathy"],
               receivedTelepathies: widget.telepathyInfo["receivedTelepathy"],
             ),
-            Text(
-              "보낸 텔레파시",
-              style: TextStyle(color: Colors.white, fontSize: 30),
-            ),
-            SentTelepathyBoxes(
-                sentTelepathies: widget.telepathyInfo["sentTelepathy"]),
-            Text(
-              "받은 텔레파시",
-              style: TextStyle(color: Colors.white, fontSize: 30),
-            ),
-            ReceivedTelepathyBoxes(
-              receivedTelepathies: widget.telepathyInfo["receivedTelepathy"],
-            ),
+
+            if (messeageSwitch == true)
+              SentTelepathyBoxes(
+                  sentTelepathies: widget.telepathyInfo["sentTelepathy"]),
+
+            if (messeageSwitch == false)
+              ReceivedTelepathyBoxes(
+                receivedTelepathies: widget.telepathyInfo["receivedTelepathy"],
+              ),
             //  텍스트 필드. 텍스트필드에 controller를 등록하여 리스너를 통한 핸들링
 
             ElevatedButton(
@@ -94,18 +139,18 @@ class ConnectedTelepathyBoxes extends StatelessWidget {
       sentTelepathy.keys.forEach((phoneNumber) {
         sentTelepathyNumberList.add(phoneNumber);
       });
-      print("각각 sentTelepathy $sentTelepathy");
+      // print("각각 sentTelepathy $sentTelepathy");
     }
 
     for (var receivedTelepathy in receivedTelepathies) {
-      print("각각 receivedTelepathy $receivedTelepathy");
+      // print("각각 receivedTelepathy $receivedTelepathy");
       receivedTelepathy.forEach((phoneNumber, text) {
         if (sentTelepathyNumberList.contains(phoneNumber) == true) {
           result.add({"$phoneNumber": '$text'});
         }
       });
     }
-    print("sentTelepathyNumberList $sentTelepathyNumberList");
+    // print("sentTelepathyNumberList $sentTelepathyNumberList");
     return result;
   }
 
