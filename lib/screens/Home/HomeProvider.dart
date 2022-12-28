@@ -28,6 +28,7 @@ class telepathyInfoNotifier extends StateNotifier<Map> {
       "sentTelepathy": sentTelepathy,
       "receivedTelepathy": receivedTelepathy
     };
+    print("initResult $initResult");
     state = initResult;
   }
 }

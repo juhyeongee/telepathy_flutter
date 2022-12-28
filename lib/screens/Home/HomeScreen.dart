@@ -58,10 +58,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 14, 7, 34),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _widgetOptions,
+      body: Container(
+        child: _widgetOptions.elementAt(_selectedIndex),
       ),
+      // * tab- rerender 방지용 코드, 필요하면 사용
+      // body: IndexedStack(
+      //   index: _selectedIndex,
+      //   children: _widgetOptions,
+      // ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(

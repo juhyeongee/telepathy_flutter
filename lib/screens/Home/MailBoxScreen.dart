@@ -24,20 +24,6 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
 
   void initState() {
     super.initState();
-    getMySentMessageList();
-  }
-
-  getMyMessage() async {
-    var result =
-        await firestore.collection('messageData').doc("01053618962").get();
-    return result;
-  }
-
-  sendMyNewMessage() {
-    firestore
-        .collection("messageData")
-        .doc("01053618962")
-        .set({"to": "01011111111", "from": "010", "message": "코드로 보내본 메세지"});
   }
 
   routeToWriteMessagingScreen() {
@@ -59,7 +45,6 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
               "통한 텔레파시",
               style: TextStyle(color: Colors.white, fontSize: 30),
             ),
-            SuccessfulTelepathyBoxes(),
             Text(
               "보낸 텔레파시",
               style: TextStyle(color: Colors.white, fontSize: 30),
@@ -85,53 +70,17 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
   }
 }
 
-class SuccessfulTelepathyBoxes extends StatefulWidget {
-  const SuccessfulTelepathyBoxes({super.key});
-
-  @override
-  State<SuccessfulTelepathyBoxes> createState() =>
-      _SuccessfulTelepathyBoxesState();
-}
-
-class _SuccessfulTelepathyBoxesState extends State<SuccessfulTelepathyBoxes> {
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getSuccessfulTelepathy(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData == false) {
-          return CircularProgressIndicator();
-        }
-        //error가 발생하게 될 경우 반환하게 되는 부분
-        else if (snapshot.hasError) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Error: ${snapshot.error}',
-              style: TextStyle(fontSize: 15),
-            ),
-          );
-        }
-        // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
-        else {
-          return Column(
-            children: [
-              for (var sentMessage in snapshot.data!)
-                MessageContainer(
-                  result: sentMessage,
-                )
-            ],
-          );
-        }
-      },
-    );
-  }
-}
-
 //연결된 텔레파시들
 
 class ConnectedTelepathyBoxes extends StatelessWidget {
-  const ConnectedTelepathyBoxes({super.key});
+  final List sentTelepathies;
+  final List receivedTelepathies;
+
+  const ConnectedTelepathyBoxes({
+    super.key,
+    required this.sentTelepathies,
+    required this.receivedTelepathies,
+  });
 
   @override
   Widget build(BuildContext context) {
