@@ -24,6 +24,7 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
 
   void initState() {
     super.initState();
+    // getMySentTelepathyList();
   }
 
   routeToWriteMessagingScreen() {
@@ -44,6 +45,10 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
             Text(
               "통한 텔레파시",
               style: TextStyle(color: Colors.white, fontSize: 30),
+            ),
+            ConnectedTelepathyBoxes(
+              sentTelepathies: widget.telepathyInfo["sentTelepathy"],
+              receivedTelepathies: widget.telepathyInfo["receivedTelepathy"],
             ),
             Text(
               "보낸 텔레파시",
@@ -76,15 +81,59 @@ class ConnectedTelepathyBoxes extends StatelessWidget {
   final List sentTelepathies;
   final List receivedTelepathies;
 
-  const ConnectedTelepathyBoxes({
+  ConnectedTelepathyBoxes({
     super.key,
     required this.sentTelepathies,
     required this.receivedTelepathies,
   });
 
+  List searchConnectNumber() {
+    List sentTelepathyNumberList = [];
+    List result = [];
+    for (var sentTelepathy in sentTelepathies) {
+      sentTelepathy.keys.forEach((phoneNumber) {
+        sentTelepathyNumberList.add(phoneNumber);
+      });
+      print("각각 sentTelepathy $sentTelepathy");
+    }
+
+    for (var receivedTelepathy in receivedTelepathies) {
+      print("각각 receivedTelepathy $receivedTelepathy");
+      receivedTelepathy.forEach((phoneNumber, text) {
+        if (sentTelepathyNumberList.contains(phoneNumber) == true) {
+          result.add({"$phoneNumber": '$text'});
+        }
+      });
+    }
+    print("sentTelepathyNumberList $sentTelepathyNumberList");
+    return result;
+  }
+
+  MessageContainer makeMessageContainer(sortedResultTelepathy) {
+    String phoneNumber = "";
+    String text = "";
+
+    sortedResultTelepathy.forEach((k, v) {
+      phoneNumber = k;
+      text = v;
+    });
+    return MessageContainer(
+      text: text,
+      phoneNumber: phoneNumber,
+      connected: true,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    final List sortedResultTelepathies = searchConnectNumber();
+
+    return Column(
+      children: [
+        for (var sortedResultTelepathy in sortedResultTelepathies)
+          makeMessageContainer(sortedResultTelepathy)
+      ],
+    );
   }
 }
 
@@ -94,14 +143,27 @@ class SentTelepathyBoxes extends StatelessWidget {
   final List sentTelepathies;
   const SentTelepathyBoxes({super.key, required this.sentTelepathies});
 
+  MessageContainer makeMessageContainer(sentTelepathy) {
+    String phoneNumber = "";
+    String text = "";
+
+    sentTelepathy.forEach((k, v) {
+      phoneNumber = k;
+      text = v;
+    });
+    return MessageContainer(
+      text: text,
+      phoneNumber: phoneNumber,
+      connected: false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        for (var sentMessage in sentTelepathies)
-          MessageContainer(
-            result: sentMessage,
-          )
+        for (var sentTelepathy in sentTelepathies)
+          makeMessageContainer(sentTelepathy)
       ],
     );
   }
@@ -113,14 +175,27 @@ class ReceivedTelepathyBoxes extends StatelessWidget {
   final List receivedTelepathies;
   const ReceivedTelepathyBoxes({super.key, required this.receivedTelepathies});
 
+  MessageContainer makeMessageContainer(receivedTelepathy) {
+    String phoneNumber = "";
+    String text = "";
+
+    receivedTelepathy.forEach((k, v) {
+      phoneNumber = k;
+      text = v;
+    });
+    return MessageContainer(
+      text: text,
+      phoneNumber: phoneNumber,
+      connected: false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        for (var sentMessage in receivedTelepathies)
-          MessageContainer(
-            result: sentMessage,
-          )
+        for (var receivedTelepathy in receivedTelepathies)
+          makeMessageContainer(receivedTelepathy)
       ],
     );
   }
@@ -128,16 +203,25 @@ class ReceivedTelepathyBoxes extends StatelessWidget {
 
 //메시지 박스 위젯
 class MessageContainer extends StatelessWidget {
-  const MessageContainer({super.key, required this.result, this.phoneNumber});
-  final result;
+  const MessageContainer({
+    super.key,
+    required this.text,
+    required this.phoneNumber,
+    required this.connected,
+  });
+  final text;
   final phoneNumber;
+  final connected;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xff72D4A5), width: 5),
+        border: Border.all(
+          color: connected ? Color(0xffF0E455) : Color(0xff72D4A5),
+          width: 5,
+        ),
         borderRadius: BorderRadius.circular(10),
         color: Colors.grey[900],
       ),
@@ -151,12 +235,12 @@ class MessageContainer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
-              "010-3008-8962",
+              "$phoneNumber",
               style: TextStyle(
                   fontFamily: "neodgm", color: Color(0xff72D4A5), fontSize: 14),
             ),
             Text(
-              "$result",
+              "$text",
               style: TextStyle(
                   fontFamily: "neodgm", color: Color(0xff72D4A5), fontSize: 16),
               overflow: TextOverflow.ellipsis,
