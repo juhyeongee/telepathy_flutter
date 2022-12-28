@@ -3,6 +3,8 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+const MY_PHONE_NUM = "01053618962";
+
 class WritingMessageScreen extends StatelessWidget {
   const WritingMessageScreen({super.key});
 
@@ -21,10 +23,13 @@ class WritingMessageScreen extends StatelessWidget {
     void updateMyNewMessage() async {
       await firestore
           .collection("messageData")
-          .doc("01053618962")
+          .doc(MY_PHONE_NUM)
           .collection("sentMessage")
-          .doc("${phoneNumberTextController}")
-          .set({"body": messageTextController.text});
+          .doc(phoneNumberTextController.text)
+          .set({
+        "body": messageTextController.text,
+        "targetPhoneNum": phoneNumberTextController.text
+      });
       Navigator.pop(context);
     }
 
