@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
-import 'firebase_messaging_api_key.dart';
+import 'package:telepathy_flutter/functions/firebase_messaging_api_key.dart';
 
 class FCMController {
-  final String _serverKey = serverkey;
+  final String _serverKey = serverKey;
 
   Future<void> sendPushNotification({
     required String userToken,

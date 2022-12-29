@@ -1,8 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:telepathy_flutter/screens/Home/WritingMessageScreen.dart';
 import 'package:telepathy_flutter/screens/Intro/Intro.dart';
 import 'package:telepathy_flutter/screens/LoginScreen.dart';
 import 'firebase_options.dart';
@@ -70,7 +72,7 @@ void main() async {
 
   /* 맨 처음 초기화 시켜주기  */
 
-  runApp(MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -96,7 +98,16 @@ class MyApp extends StatelessWidget {
               builder: (_, state) => IntroScreen(),
             )
           ]),
-      GoRoute(path: "/homeScreen", builder: (_, state) => HomeScreen()),
+      GoRoute(
+        path: "/homeScreen",
+        builder: (_, state) => HomeScreen(),
+        routes: [
+          GoRoute(
+              path: "writeMessage",
+              name: "writeMessage",
+              builder: (_, state) => WritingMessageScreen())
+        ],
+      )
       // GoRoute(path: "/Intro", builder: (_, state) => IntroScreen()),
       // GoRoute(path: "/Home", builder: (_, state) => HomeScreen())
     ],
