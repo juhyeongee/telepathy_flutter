@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:telepathy_flutter/screens/Home/SettingScreen.dart';
 import 'HomeProvider.dart';
@@ -23,7 +21,7 @@ class PlanetScreen extends ConsumerWidget {
               alignment: Alignment(0, -0.5),
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/planetScreen.png'),
                   fit: BoxFit.cover,
@@ -42,7 +40,7 @@ class PlanetScreen extends ConsumerWidget {
             top: MediaQuery.of(context).size.height * 0.5,
             right: 100,
             child: Container(
-              margin: EdgeInsets.all(16.0),
+              margin: const EdgeInsets.all(16.0),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -69,7 +67,7 @@ class PlanetScreen extends ConsumerWidget {
             top: MediaQuery.of(context).size.height * 0.65,
             left: 140,
             child: Container(
-              margin: EdgeInsets.all(16.0),
+              margin: const EdgeInsets.all(16.0),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[

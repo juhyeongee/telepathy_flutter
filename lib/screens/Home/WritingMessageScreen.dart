@@ -1,8 +1,5 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -42,7 +39,7 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
     /* 
      :::  Modal dialogs functions ::: 
     */
-    Future<dynamic> _showCheckingPhoneNumDialog({
+    Future<dynamic> showCheckingPhoneNumDialog({
       required BuildContext context,
       required text,
     }) {
@@ -55,7 +52,7 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
             fontFamily: "neodgm",
             fontSize: 22,
           ),
-          contentTextStyle: TextStyle(
+          contentTextStyle: const TextStyle(
             color: Color(0xff72D4A5),
             fontFamily: "neodgm",
             fontSize: 18,
@@ -66,7 +63,7 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
           actions: [
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                       color: Color(0xff72D4A5),
                       fontFamily: "neodgm",
                       fontSize: 20,
@@ -80,7 +77,7 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
       );
     }
 
-    Future<dynamic> _showCheckingTextDialog({
+    Future<dynamic> showCheckingTextDialog({
       required BuildContext context,
       required text,
     }) {
@@ -93,32 +90,32 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
             fontFamily: "neodgm",
             fontSize: 22,
           ),
-          contentTextStyle: TextStyle(
+          contentTextStyle: const TextStyle(
             color: Color(0xff72D4A5),
             fontFamily: "neodgm",
             fontSize: 18,
           ),
-          backgroundColor: Color(0xff262630),
-          title: Text('🚧 잠깐!'),
+          backgroundColor: const Color(0xff262630),
+          title: const Text('🚧 잠깐!'),
           content: Text(text),
           actions: [
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                       color: Color(0xff72D4A5),
                       fontFamily: "neodgm",
                       fontSize: 20,
                     ),
-                    backgroundColor: Color(0xff72D4A5),
-                    minimumSize: Size(40, 50)),
+                    backgroundColor: const Color(0xff72D4A5),
+                    minimumSize: const Size(40, 50)),
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text('확인')),
+                child: const Text('확인')),
           ],
         ),
       );
     }
 
-    Future<dynamic> _showTelepathyConfirmSendingDialog({
+    Future<dynamic> showTelepathyConfirmSendingDialog({
       required BuildContext context,
     }) {
       return showDialog(
@@ -130,26 +127,26 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
             fontFamily: "neodgm",
             fontSize: 22,
           ),
-          contentTextStyle: TextStyle(
+          contentTextStyle: const TextStyle(
             color: Color(0xff72D4A5),
             fontFamily: "neodgm",
             fontSize: 18,
           ),
-          backgroundColor: Color(0xff262630),
+          backgroundColor: const Color(0xff262630),
           title: Text('텔레파시를 전송합니다🚀'),
           content: Text("텔레파시 배터리가 1개 차감됩니다."),
           actions: [
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                       color: Color(0xff72D4A5),
                       fontFamily: "neodgm",
                       fontSize: 20,
                     ),
-                    backgroundColor: Color(0xff72D4A5),
-                    minimumSize: Size(40, 50)),
+                    backgroundColor: const Color(0xff72D4A5),
+                    minimumSize: const Size(40, 50)),
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text('보내기')),
+                child: const Text('보내기')),
           ],
         ),
       );
@@ -207,18 +204,17 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
     //같은 doc으로 보내면, 초기화가 됨
     void updateMyNewMessage() async {
       if (phoneNumberTextController.text.length != 11) {
-        _showCheckingPhoneNumDialog(
-            context: context, text: '전화번호 입력창을 확인해주세요!');
+        showCheckingPhoneNumDialog(context: context, text: '전화번호 입력창을 확인해주세요!');
         return;
       }
       // if (phoneNumberTextController.text)
       if (messageTextController.text.length == 0) {
-        _showCheckingTextDialog(context: context, text: "텔레파시 입력창을 확인해주세요!");
+        showCheckingTextDialog(context: context, text: "텔레파시 입력창을 확인해주세요!");
         return;
       }
 
       if (phoneNumberTextController.text.substring(0, 3) != "010") {
-        _showCheckingPhoneNumDialog(context: context, text: "앞에 010을 붙여주세요!");
+        showCheckingPhoneNumDialog(context: context, text: "앞에 010을 붙여주세요!");
         return;
       }
 
@@ -238,7 +234,7 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.black,
-            textColor: Color(0xff72D4A5),
+            textColor: const Color(0xff72D4A5),
             fontSize: 18.0);
         Navigator.pop(context);
       } catch (err) {
@@ -247,15 +243,15 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
     }
 
     return Scaffold(
-      backgroundColor: Color(0xff1E1831),
+      backgroundColor: const Color(0xff1E1831),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20, bottom: 10),
+            const Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 10),
               child: Text(
                 "보내기",
                 style: TextStyle(
@@ -267,7 +263,7 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
             ),
             Row(
               children: [
-                Text(
+                const Text(
                   "to.",
                   style: TextStyle(
                     color: Color(0xff72D4A5),
@@ -284,7 +280,7 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
                       fontSize: 20,
                       color: Color(0xff72D4A5),
                     ),
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: '전화번호를 입력하세요',
                       hintStyle: TextStyle(
@@ -346,20 +342,20 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
               padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                       color: Color(0xff72D4A5),
                       fontFamily: "neodgm",
                       fontSize: 20,
                     ),
-                    backgroundColor: Color(0xff30453B),
-                    minimumSize: Size(40, 50)),
+                    backgroundColor: const Color(0xff30453B),
+                    minimumSize: const Size(40, 50)),
                 onPressed: () {
                   addTempSavedTelepathy(
                     targetNumber: phoneNumberTextController.text,
                     text: messageTextController.text,
                   );
                 },
-                child: Text(
+                child: const Text(
                   "임시저장",
                   style: TextStyle(color: Color(0xff72D4A5)),
                 ),
@@ -369,18 +365,18 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
               padding: const EdgeInsets.only(bottom: 12.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                       color: Color(0xff72D4A5),
                       fontFamily: "neodgm",
                       fontSize: 20,
                     ),
-                    backgroundColor: Color(0xff72D4A5),
-                    minimumSize: Size(40, 50)),
+                    backgroundColor: const Color(0xff72D4A5),
+                    minimumSize: const Size(40, 50)),
                 onPressed: () async {
-                  await _showTelepathyConfirmSendingDialog(context: context);
+                  await showTelepathyConfirmSendingDialog(context: context);
                   updateMyNewMessage();
                 },
-                child: Text(
+                child: const Text(
                   "메세지 보내기",
                   style: TextStyle(color: Colors.black),
                 ),
@@ -390,15 +386,15 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
               padding: const EdgeInsets.only(bottom: 12.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                       color: Color(0xff72D4A5),
                       fontFamily: "neodgm",
                       fontSize: 20,
                     ),
-                    backgroundColor: Color(0xff72D4A5),
-                    minimumSize: Size(40, 50)),
+                    backgroundColor: const Color(0xff72D4A5),
+                    minimumSize: const Size(40, 50)),
                 onPressed: readTempSavedTelepathy,
-                child: Text(
+                child: const Text(
                   "임시저장 불러와보기 ",
                   style: TextStyle(color: Colors.black),
                 ),

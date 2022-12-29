@@ -1,13 +1,6 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:telepathy_flutter/screens/Home/WritingMessageScreen.dart';
-
-import 'HomeProvider.dart';
 
 final firestore = FirebaseFirestore.instance;
 
@@ -20,12 +13,12 @@ class MailBoxScreen extends StatefulWidget {
 }
 
 class _MailBoxScreenState extends State<MailBoxScreen> {
-  bool messeageSwitch = false;
+  bool messageSwitch = false;
   var myMessage = [];
 
   void initState() {
     super.initState();
-    messeageSwitch = false;
+    messageSwitch = false;
     // getMySentTelepathyList();
   }
 
@@ -62,16 +55,15 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            if (messeageSwitch == true)
+                            if (messageSwitch == true)
                               setState(() {
-                                messeageSwitch = false;
+                                messageSwitch = false;
                               });
                           },
                           child: Text(
                             "받은 텔레파시",
                             style: TextStyle(
-                              color:
-                                  messeageSwitch ? Colors.grey : Colors.white,
+                              color: messageSwitch ? Colors.grey : Colors.white,
                               fontSize: 22,
                               fontFamily: "neodgm",
                             ),
@@ -79,16 +71,15 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            if (messeageSwitch == false)
+                            if (messageSwitch == false)
                               setState(() {
-                                messeageSwitch = true;
+                                messageSwitch = true;
                               });
                           },
                           child: Text(
                             "보낸 텔레파시",
                             style: TextStyle(
-                              color:
-                                  messeageSwitch ? Colors.white : Colors.grey,
+                              color: messageSwitch ? Colors.white : Colors.grey,
                               fontSize: 22,
                               fontFamily: "neodgm",
                             ),
@@ -125,11 +116,11 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
                         receivedTelepathies:
                             widget.telepathyInfo["receivedTelepathy"],
                       ),
-                      if (messeageSwitch == true)
+                      if (messageSwitch == true)
                         SentTelepathyBoxes(
                             sentTelepathies:
                                 widget.telepathyInfo["sentTelepathy"]),
-                      if (messeageSwitch == false)
+                      if (messageSwitch == false)
                         //  텍스트 필드. 텍스트필드에 controller를 등록하여 리스너를 통한 핸들링
                         ReceivedTelepathyBoxes(
                           receivedTelepathies:
