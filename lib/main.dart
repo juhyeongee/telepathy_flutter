@@ -96,7 +96,7 @@ class MyApp extends StatelessWidget {
               builder: (_, state) => IntroScreen(),
             )
           ]),
-      GoRoute(path: "/homeScreen", builder: (_, state) => HomeScreen())
+      GoRoute(path: "/homeScreen", builder: (_, state) => HomeScreen()),
       // GoRoute(path: "/Intro", builder: (_, state) => IntroScreen()),
       // GoRoute(path: "/Home", builder: (_, state) => HomeScreen())
     ],
