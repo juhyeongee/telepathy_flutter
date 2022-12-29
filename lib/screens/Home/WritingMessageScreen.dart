@@ -1,24 +1,47 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 const MY_PHONE_NUM = "01053618962";
 
-class WritingMessageScreen extends StatelessWidget {
+class WritingMessageScreen extends StatefulWidget {
   const WritingMessageScreen({super.key});
 
   @override
+  State<WritingMessageScreen> createState() => _WritingMessageScreenState();
+}
+
+class _WritingMessageScreenState extends State<WritingMessageScreen> {
+  final _storage = const FlutterSecureStorage();
+  final firestore = FirebaseFirestore.instance;
+
+  final messageTextController = TextEditingController();
+  final phoneNumberTextController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    messageTextController.dispose();
+    phoneNumberTextController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final firestore = FirebaseFirestore.instance;
-
-    final messageTextController = TextEditingController();
-    final phoneNumberTextController = TextEditingController();
-
-    void _printLatestValue() {
-      print("Second text field: ${messageTextController.text}");
-    }
-
+    /* 
+     :::  Modal dialogs functions ::: 
+    */
     Future<dynamic> _showCheckingPhoneNumDialog({
       required BuildContext context,
       required text,
@@ -132,6 +155,55 @@ class WritingMessageScreen extends StatelessWidget {
       );
     }
 
+    /* 
+     :::  secure-storage dialogs functions ::: 
+    */
+
+    Future<void> readTempSavedTelepathy() async {
+      String? tempSavedTelepathy =
+          await _storage.read(key: "tempSavedTelepathy");
+      if (tempSavedTelepathy == null) {
+        print("엇습니다0");
+        return;
+      } else {
+        print("tempSavedTelepathy $tempSavedTelepathy");
+      }
+
+      Map decodedValue = jsonDecode(tempSavedTelepathy);
+      print("decodedValue $decodedValue");
+      print(decodedValue.runtimeType);
+
+      var phoneNumber;
+      var text;
+      decodedValue.forEach((key, value) {
+        phoneNumber = key;
+        text = value;
+      });
+      // readTempSavedTelepathy();
+      messageTextController.value = TextEditingValue(
+        text: text,
+        selection: TextSelection.fromPosition(
+          TextPosition(offset: text.length),
+        ),
+      );
+      phoneNumberTextController.value = TextEditingValue(
+        text: phoneNumber,
+        selection: TextSelection.fromPosition(
+          TextPosition(offset: phoneNumber.length),
+        ),
+      );
+    }
+
+    Future<void> addTempSavedTelepathy({
+      required targetNumber,
+      required text,
+    }) async {
+      final encodedValue = jsonEncode({"$targetNumber": "$text"});
+      await _storage.write(key: "tempSavedTelepathy", value: encodedValue);
+      print("저장 완료");
+      String? tempSavedText = await _storage.read(key: "tempSavedTelepathy");
+    }
+
     //같은 doc으로 보내면, 초기화가 됨
     void updateMyNewMessage() async {
       if (phoneNumberTextController.text.length != 11) {
@@ -160,6 +232,14 @@ class WritingMessageScreen extends StatelessWidget {
           "body": messageTextController.text,
           "targetPhoneNum": phoneNumberTextController.text
         });
+        Fluttertoast.showToast(
+            msg: "메세지가 전송되었습니다.",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.black,
+            textColor: Color(0xff72D4A5),
+            fontSize: 18.0);
         Navigator.pop(context);
       } catch (err) {
         print("updateMyNewMessage err: $err");
@@ -273,7 +353,12 @@ class WritingMessageScreen extends StatelessWidget {
                     ),
                     backgroundColor: Color(0xff30453B),
                     minimumSize: Size(40, 50)),
-                onPressed: () {},
+                onPressed: () {
+                  addTempSavedTelepathy(
+                    targetNumber: phoneNumberTextController.text,
+                    text: messageTextController.text,
+                  );
+                },
                 child: Text(
                   "임시저장",
                   style: TextStyle(color: Color(0xff72D4A5)),
@@ -297,6 +382,24 @@ class WritingMessageScreen extends StatelessWidget {
                 },
                 child: Text(
                   "메세지 보내기",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    textStyle: TextStyle(
+                      color: Color(0xff72D4A5),
+                      fontFamily: "neodgm",
+                      fontSize: 20,
+                    ),
+                    backgroundColor: Color(0xff72D4A5),
+                    minimumSize: Size(40, 50)),
+                onPressed: readTempSavedTelepathy,
+                child: Text(
+                  "임시저장 불러와보기 ",
                   style: TextStyle(color: Colors.black),
                 ),
               ),
