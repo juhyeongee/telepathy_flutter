@@ -23,8 +23,6 @@ class _IntroScreenState extends State<IntroScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final router = GoRouter.of(context);
-
     final introTextList = [
       "치직,\n이곳은 끝없는 우주...",
       "저 멀리 당신의 행성이 보입니다.",

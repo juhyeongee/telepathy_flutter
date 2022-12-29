@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:telepathy_flutter/screens/Home/MailBoxScreen.dart';
+import 'package:telepathy_flutter/screens/Home/SettingScreen.dart';
 import 'package:telepathy_flutter/screens/Home/WritingMessageScreen.dart';
 import 'package:telepathy_flutter/screens/Intro/Intro.dart';
 import 'package:telepathy_flutter/screens/LoginScreen.dart';
@@ -12,6 +14,7 @@ import 'package:telepathy_flutter/keys.dart';
 import "package:flutter_local_notifications/flutter_local_notifications.dart";
 
 import 'screens/Home/HomeScreen.dart';
+import 'screens/Home/PlanetScreen.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message ${message.messageId}');
@@ -89,25 +92,32 @@ class MyApp extends StatelessWidget {
       GoRoute(
           path: "/",
           builder: (_, state) {
-            return LoginScreen();
+            return const LoginScreen();
           },
           routes: [
             GoRoute(
               path: "intro",
               name: "intro",
-              builder: (_, state) => IntroScreen(),
+              builder: (_, state) => const IntroScreen(),
+            ),
+            GoRoute(
+              path: "planetScreen",
+              builder: (_, state) => const PlanetScreen(),
+              routes: [
+                // GoRoute(
+                //     path: "writeMessage",
+                //     name: "writeMessage",
+                //     builder: (_, state) => const MailBoxScreen(
+                //           telepathyInfo: telepathyInfos,
+                //         )),
+                // GoRoute(
+                //     path: "settings",
+                //     name: "settings",
+                //     builder: (_, state) => const SettingScreen())
+              ],
             )
           ]),
-      GoRoute(
-        path: "/homeScreen",
-        builder: (_, state) => HomeScreen(),
-        routes: [
-          GoRoute(
-              path: "writeMessage",
-              name: "writeMessage",
-              builder: (_, state) => WritingMessageScreen())
-        ],
-      )
+
       // GoRoute(path: "/Intro", builder: (_, state) => IntroScreen()),
       // GoRoute(path: "/Home", builder: (_, state) => HomeScreen())
     ],
@@ -115,13 +125,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      //라우트 정보전달: 여기에 이렇게 해놓으면, GoRoute만 신경쓰면 된다
-      routeInformationProvider: _router.routeInformationProvider,
-      //URI String을 상태 및 Go router에서 사용할 수 있는 형태로 변환해주는 함수
-      routeInformationParser: _router.routeInformationParser,
-      // 위에서 변경된 값으로 실제 어떤 라우트를 보여줄지 정하는 함수
-      routerDelegate: _router.routerDelegate,
-    );
+    return MaterialApp(title: 'Telepathy Flutter', home: LoginScreen());
+    // return MaterialApp.router(
+    //   //라우트 정보전달: 여기에 이렇게 해놓으면, GoRoute만 신경쓰면 된다
+    //   routeInformationProvider: _router.routeInformationProvider,
+    //   //URI String을 상태 및 Go router에서 사용할 수 있는 형태로 변환해주는 함수
+    //   routeInformationParser: _router.routeInformationParser,
+    //   // 위에서 변경된 값으로 실제 어떤 라우트를 보여줄지 정하는 함수
+    //   routerDelegate: _router.routerDelegate,
+    // );
   }
 }
