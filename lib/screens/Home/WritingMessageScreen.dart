@@ -19,18 +19,151 @@ class WritingMessageScreen extends StatelessWidget {
       print("Second text field: ${messageTextController.text}");
     }
 
+    Future<dynamic> _showCheckingPhoneNumDialog({
+      required BuildContext context,
+      required text,
+    }) {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          actionsAlignment: MainAxisAlignment.center,
+          titleTextStyle: const TextStyle(
+            color: Color(0xff72D4A5),
+            fontFamily: "neodgm",
+            fontSize: 22,
+          ),
+          contentTextStyle: TextStyle(
+            color: Color(0xff72D4A5),
+            fontFamily: "neodgm",
+            fontSize: 18,
+          ),
+          backgroundColor: Color(0xff262630),
+          title: Text('🚧 문제가 발생했어요'),
+          content: Text(text),
+          actions: [
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    textStyle: TextStyle(
+                      color: Color(0xff72D4A5),
+                      fontFamily: "neodgm",
+                      fontSize: 20,
+                    ),
+                    backgroundColor: Color(0xff72D4A5),
+                    minimumSize: Size(40, 50)),
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('확인')),
+          ],
+        ),
+      );
+    }
+
+    Future<dynamic> _showCheckingTextDialog({
+      required BuildContext context,
+      required text,
+    }) {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          actionsAlignment: MainAxisAlignment.center,
+          titleTextStyle: const TextStyle(
+            color: Color(0xff72D4A5),
+            fontFamily: "neodgm",
+            fontSize: 22,
+          ),
+          contentTextStyle: TextStyle(
+            color: Color(0xff72D4A5),
+            fontFamily: "neodgm",
+            fontSize: 18,
+          ),
+          backgroundColor: Color(0xff262630),
+          title: Text('🚧 잠깐!'),
+          content: Text(text),
+          actions: [
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    textStyle: TextStyle(
+                      color: Color(0xff72D4A5),
+                      fontFamily: "neodgm",
+                      fontSize: 20,
+                    ),
+                    backgroundColor: Color(0xff72D4A5),
+                    minimumSize: Size(40, 50)),
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('확인')),
+          ],
+        ),
+      );
+    }
+
+    Future<dynamic> _showTelepathyConfirmSendingDialog({
+      required BuildContext context,
+    }) {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          actionsAlignment: MainAxisAlignment.center,
+          titleTextStyle: const TextStyle(
+            color: Color(0xff72D4A5),
+            fontFamily: "neodgm",
+            fontSize: 22,
+          ),
+          contentTextStyle: TextStyle(
+            color: Color(0xff72D4A5),
+            fontFamily: "neodgm",
+            fontSize: 18,
+          ),
+          backgroundColor: Color(0xff262630),
+          title: Text('텔레파시를 전송합니다🚀'),
+          content: Text("텔레파시 배터리가 1개 차감됩니다."),
+          actions: [
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    textStyle: TextStyle(
+                      color: Color(0xff72D4A5),
+                      fontFamily: "neodgm",
+                      fontSize: 20,
+                    ),
+                    backgroundColor: Color(0xff72D4A5),
+                    minimumSize: Size(40, 50)),
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('보내기')),
+          ],
+        ),
+      );
+    }
+
     //같은 doc으로 보내면, 초기화가 됨
     void updateMyNewMessage() async {
-      await firestore
-          .collection("messageData")
-          .doc(MY_PHONE_NUM)
-          .collection("sentMessage")
-          .doc(phoneNumberTextController.text)
-          .set({
-        "body": messageTextController.text,
-        "targetPhoneNum": phoneNumberTextController.text
-      });
-      Navigator.pop(context);
+      if (phoneNumberTextController.text.length != 11) {
+        _showCheckingPhoneNumDialog(
+            context: context, text: '전화번호 입력창을 확인해주세요!');
+        return;
+      }
+      // if (phoneNumberTextController.text)
+      if (messageTextController.text.length == 0) {
+        _showCheckingTextDialog(context: context, text: "텔레파시 입력창을 확인해주세요!");
+        return;
+      }
+
+      if (phoneNumberTextController.text.substring(0, 3) != "010") {
+        _showCheckingPhoneNumDialog(context: context, text: "앞에 010을 붙여주세요!");
+        return;
+      }
+
+      try {
+        await firestore
+            .collection("messageData")
+            .doc(MY_PHONE_NUM)
+            .collection("sentMessage")
+            .doc(phoneNumberTextController.text)
+            .set({
+          "body": messageTextController.text,
+          "targetPhoneNum": phoneNumberTextController.text
+        });
+        Navigator.pop(context);
+      } catch (err) {
+        print("updateMyNewMessage err: $err");
+      }
     }
 
     return Scaffold(
@@ -140,7 +273,7 @@ class WritingMessageScreen extends StatelessWidget {
                     ),
                     backgroundColor: Color(0xff30453B),
                     minimumSize: Size(40, 50)),
-                onPressed: updateMyNewMessage,
+                onPressed: () {},
                 child: Text(
                   "임시저장",
                   style: TextStyle(color: Color(0xff72D4A5)),
@@ -158,7 +291,10 @@ class WritingMessageScreen extends StatelessWidget {
                     ),
                     backgroundColor: Color(0xff72D4A5),
                     minimumSize: Size(40, 50)),
-                onPressed: updateMyNewMessage,
+                onPressed: () async {
+                  await _showTelepathyConfirmSendingDialog(context: context);
+                  updateMyNewMessage();
+                },
                 child: Text(
                   "메세지 보내기",
                   style: TextStyle(color: Colors.black),
