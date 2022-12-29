@@ -63,6 +63,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.white),
+                      onPressed: () {
+                        context.go('/intro');
+                      },
+                      child: Text(
+                        "인트로보기",
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.amber,
                           foregroundColor: Colors.black),
                       onPressed: () async {
