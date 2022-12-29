@@ -14,6 +14,8 @@ class MailBoxScreen extends StatefulWidget {
 
 class _MailBoxScreenState extends State<MailBoxScreen> {
   bool messageSwitch = false;
+  bool connectedTelepathySwitch = false;
+
   var myMessage = [];
 
   void initState() {
@@ -47,8 +49,9 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
             children: [
               //HEADER
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -94,7 +97,6 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
                     Padding(
                       padding: const EdgeInsets.only(
                         top: 10.0,
-                        bottom: 10,
                       ),
                       child: Container(
                         color: Colors.grey,
@@ -104,18 +106,46 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
                   ],
                 ),
               ),
-
+              Expanded(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "교신 텔레파시 보기",
+                      style: TextStyle(
+                        color: Color(0xff72D4A5),
+                        fontFamily: "neodgm",
+                        fontSize: 15,
+                      ),
+                    ),
+                    Switch(
+                      activeTrackColor: const Color(0xff72D4A5),
+                      activeColor: Color(0xff72D4A5),
+                      onChanged: (value) {
+                        setState(() {
+                          connectedTelepathySwitch = !connectedTelepathySwitch;
+                        });
+                      },
+                      value: connectedTelepathySwitch,
+                    ),
+                  ],
+                ),
+              ),
               //BODY
               Expanded(
-                flex: 8,
+                flex: 12,
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      ConnectedTelepathyBoxes(
-                        sentTelepathies: widget.telepathyInfo["sentTelepathy"],
-                        receivedTelepathies:
-                            widget.telepathyInfo["receivedTelepathy"],
-                      ),
+                      if (connectedTelepathySwitch == true)
+                        ConnectedTelepathyBoxes(
+                          sentTelepathies:
+                              widget.telepathyInfo["sentTelepathy"],
+                          receivedTelepathies:
+                              widget.telepathyInfo["receivedTelepathy"],
+                        ),
                       if (messageSwitch == true)
                         SentTelepathyBoxes(
                             sentTelepathies:
