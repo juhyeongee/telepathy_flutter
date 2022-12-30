@@ -1,13 +1,6 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-
-import 'HomeProvider.dart';
+import 'package:telepathy_flutter/screens/Home/WritingMessageScreen.dart';
 
 final firestore = FirebaseFirestore.instance;
 
@@ -20,17 +13,23 @@ class MailBoxScreen extends StatefulWidget {
 }
 
 class _MailBoxScreenState extends State<MailBoxScreen> {
-  bool messeageSwitch = false;
+  bool messageSwitch = false;
+  bool connectedTelepathySwitch = false;
+
   var myMessage = [];
 
   void initState() {
     super.initState();
-    messeageSwitch = false;
+    messageSwitch = false;
     // getMySentTelepathyList();
   }
 
   routeToWriteMessagingScreen() {
-    context.go("/homeScreen/writeMessage");
+    // context.go("/homeScreen/writeMessage");
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const WritingMessageScreen()),
+    );
   }
 
   @override
@@ -39,81 +38,155 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
       return CircularProgressIndicator();
     }
 
-    return SafeArea(
-      child: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Color(0xff1E1831),
+      body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    if (messeageSwitch == true)
-                      setState(() {
-                        messeageSwitch = false;
-                      });
-                  },
-                  child: Text(
-                    "받은 텔레파시",
-                    style: TextStyle(
-                      color: messeageSwitch ? Colors.grey : Colors.white,
-                      fontSize: 22,
-                      fontFamily: "neodgm",
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              //HEADER
+              Expanded(
+                flex: 2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            if (messageSwitch == true)
+                              setState(() {
+                                messageSwitch = false;
+                              });
+                          },
+                          child: Text(
+                            "받은 텔레파시",
+                            style: TextStyle(
+                              color: messageSwitch ? Colors.grey : Colors.white,
+                              fontSize: 22,
+                              fontFamily: "neodgm",
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            if (messageSwitch == false)
+                              setState(() {
+                                messageSwitch = true;
+                              });
+                          },
+                          child: Text(
+                            "보낸 텔레파시",
+                            style: TextStyle(
+                              color: messageSwitch ? Colors.white : Colors.grey,
+                              fontSize: 22,
+                              fontFamily: "neodgm",
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 30,
+                          width: 50,
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 10.0,
+                      ),
+                      child: Container(
+                        color: Colors.grey,
+                        height: 1,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "교신 텔레파시 보기",
+                      style: TextStyle(
+                        color: Color(0xff72D4A5),
+                        fontFamily: "neodgm",
+                        fontSize: 15,
+                      ),
+                    ),
+                    Switch(
+                      activeTrackColor: const Color(0xff72D4A5),
+                      activeColor: Color(0xff72D4A5),
+                      onChanged: (value) {
+                        setState(() {
+                          connectedTelepathySwitch = !connectedTelepathySwitch;
+                        });
+                      },
+                      value: connectedTelepathySwitch,
+                    ),
+                  ],
+                ),
+              ),
+              //BODY
+              Expanded(
+                flex: 12,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      if (connectedTelepathySwitch == true)
+                        ConnectedTelepathyBoxes(
+                          sentTelepathies:
+                              widget.telepathyInfo["sentTelepathy"],
+                          receivedTelepathies:
+                              widget.telepathyInfo["receivedTelepathy"],
+                        ),
+                      if (messageSwitch == true)
+                        SentTelepathyBoxes(
+                            sentTelepathies:
+                                widget.telepathyInfo["sentTelepathy"]),
+                      if (messageSwitch == false)
+                        //  텍스트 필드. 텍스트필드에 controller를 등록하여 리스너를 통한 핸들링
+                        ReceivedTelepathyBoxes(
+                          receivedTelepathies:
+                              widget.telepathyInfo["receivedTelepathy"],
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Container(
+                  color: Colors.amber,
+                  height: 60,
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        textStyle: TextStyle(
+                          color: Color(0xff72D4A5),
+                          fontFamily: "neodgm",
+                          fontSize: 20,
+                        ),
+                        backgroundColor: Color(0xff72D4A5),
+                        minimumSize: Size(10, 10),
+                        maximumSize: Size(30, 40)),
+                    onPressed: routeToWriteMessagingScreen,
+                    child: Text(
+                      "텔레파시 보내기",
+                      style: TextStyle(color: Colors.black),
                     ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    if (messeageSwitch == false)
-                      setState(() {
-                        messeageSwitch = true;
-                      });
-                  },
-                  child: Text(
-                    "보낸 텔레파시",
-                    style: TextStyle(
-                      color: messeageSwitch ? Colors.white : Colors.grey,
-                      fontSize: 22,
-                      fontFamily: "neodgm",
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 30,
-                  width: 50,
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 30.0,
-                bottom: 30,
               ),
-              child: Container(
-                color: Colors.grey,
-                height: 1,
-              ),
-            ),
-            ConnectedTelepathyBoxes(
-              sentTelepathies: widget.telepathyInfo["sentTelepathy"],
-              receivedTelepathies: widget.telepathyInfo["receivedTelepathy"],
-            ),
-
-            if (messeageSwitch == true)
-              SentTelepathyBoxes(
-                  sentTelepathies: widget.telepathyInfo["sentTelepathy"]),
-
-            if (messeageSwitch == false)
-              ReceivedTelepathyBoxes(
-                receivedTelepathies: widget.telepathyInfo["receivedTelepathy"],
-              ),
-            //  텍스트 필드. 텍스트필드에 controller를 등록하여 리스너를 통한 핸들링
-
-            ElevatedButton(
-                onPressed: routeToWriteMessagingScreen,
-                child: Text("메세지 보내러 가기")),
-          ]),
+            ],
+          ),
         ),
       ),
     );

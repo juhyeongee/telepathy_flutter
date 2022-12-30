@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:telepathy_flutter/kakao_login.dart';
 import 'package:telepathy_flutter/main_view_model.dart';
+import 'package:telepathy_flutter/screens/Home/PlanetScreen.dart';
+import 'package:telepathy_flutter/screens/Intro/Intro.dart';
 import '../functions/fcmController/fcmController.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
@@ -54,11 +55,28 @@ class _LoginScreenState extends State<LoginScreen> {
                           backgroundColor: Colors.black,
                           foregroundColor: Colors.white),
                       onPressed: () {
-                        context.go('/homeScreen');
-                        print("읽히나?");
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const PlanetScreen()));
                       },
                       child: Text(
                         "회원가입하기",
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.white),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const IntroScreen()),
+                        );
+                      },
+                      child: Text(
+                        "인트로보기",
                       ),
                     ),
                     ElevatedButton(
