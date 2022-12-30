@@ -36,11 +36,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
     /// 저장되어있는 유저정보가 있다면 인트로페이지로 갑니다
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      String? userInfo = await _storage.read(key: "UserSignInData");
-      print(userInfo);
+      String? phoneNum = await _storage.read(key: "phoneNum");
 
-      if (userInfo != null) {
-        globals.MY_PHONE_NUM = userInfo;
+      if (phoneNum != null) {
+        globals.MY_PHONE_NUM = phoneNum;
         // ignore: use_build_context_synchronously
         Navigator.push(
           context,
@@ -88,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       }
 
-      addUserSignInData(
+      addphoneNum(
         name: nameTextController.text,
         phoneNum: phoneNumberTextController.text,
       );
@@ -107,11 +106,12 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> addUserSignInData({
+  Future<void> addphoneNum({
     required name,
     required phoneNum,
   }) async {
-    await _storage.write(key: "UserSignInData", value: phoneNum);
+    await _storage.write(key: "phoneNum", value: phoneNum);
+    globals.MY_PHONE_NUM = phoneNum;
     print("로그인 정보 저장 완료");
   }
 
