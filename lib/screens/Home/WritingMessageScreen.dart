@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:telepathy_flutter/global.dart' as globals;
 
-const MY_PHONE_NUM = "01053618962";
+// const MY_PHONE_NUM = "01053618962";
 
 class WritingMessageScreen extends StatefulWidget {
   const WritingMessageScreen({super.key});
@@ -218,10 +219,15 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
         return;
       }
 
+      if (phoneNumberTextController.text == globals.MY_PHONE_NUM) {
+        showCheckingPhoneNumDialog(context: context, text: "본인에게 보낼 수 없어요!");
+        return;
+      }
+
       try {
         await firestore
             .collection("messageData")
-            .doc(MY_PHONE_NUM)
+            .doc(globals.MY_PHONE_NUM)
             .collection("sentMessage")
             .doc(phoneNumberTextController.text)
             .set({

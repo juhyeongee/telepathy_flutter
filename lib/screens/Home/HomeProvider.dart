@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:telepathy_flutter/global.dart' as globals;
 
-const MY_PHONE_NUM = "01053618962";
+// const MY_PHONE_NUM = "01053618962";
 
 final firestore = FirebaseFirestore.instance;
 
@@ -40,7 +41,7 @@ Future<List> getMyReceivedTelepathyList() async {
 
   QuerySnapshot querySnapshot = await firestore
       .collection('messageData')
-      .doc(MY_PHONE_NUM)
+      .doc(globals.MY_PHONE_NUM)
       .collection("receivedMessage")
       .get();
 
@@ -58,7 +59,7 @@ Future<List> getMyReceivedTelepathyList() async {
 //   final List mySentMessageList = [];
 //   QuerySnapshot result = await firestore
 //       .collection('messageData')
-//       .doc(MY_PHONE_NUM)
+//       .doc(globals.MY_PHONE_NUM)
 //       .collection("sentMessage")
 //       .get();
 //   result.docs.forEach((doc) {
@@ -74,13 +75,13 @@ Future<List> getMySentTelepathyList() async {
 
   QuerySnapshot querySnapshot = await firestore
       .collection('messageData')
-      .doc(MY_PHONE_NUM)
+      .doc(globals.MY_PHONE_NUM)
       .collection("sentMessage")
       .get();
 
   // Query query = await firestore
   //     .collection('messageData')
-  //     .doc(MY_PHONE_NUM)
+  //     .doc(globals.MY_PHONE_NUM)
   //     .collection("sentMessage");
   // QuerySnapshot result =
   //     await query.where("targetPhoneNum", isEqualTo: '01099999999').get();
