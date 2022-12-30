@@ -11,6 +11,7 @@ import 'package:telepathy_flutter/screens/Intro/Intro.dart';
 import '../functions/fcmController/fcmController.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
+import 'package:telepathy_flutter/global.dart' as globals;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -39,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
       print(userInfo);
 
       if (userInfo != null) {
+        globals.MY_PHONE_NUM = userInfo;
         // ignore: use_build_context_synchronously
         Navigator.push(
           context,
@@ -109,8 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
     required name,
     required phoneNum,
   }) async {
-    final encodedValue = jsonEncode({"$name": "$phoneNum"});
-    await _storage.write(key: "UserSignInData", value: encodedValue);
+    await _storage.write(key: "UserSignInData", value: phoneNum);
     print("로그인 정보 저장 완료");
   }
 
