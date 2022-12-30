@@ -125,7 +125,8 @@ class _MailBoxScreenState extends ConsumerState<MailBoxScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text(
-                      "교신 텔레파시 보기",
+                      "교신 텔레파시만 보기",
+                      //이거 토글의 역할이 좀 이상한데..?
                       style: TextStyle(
                         color: Color(0xff72D4A5),
                         fontFamily: "neodgm",
@@ -155,22 +156,21 @@ class _MailBoxScreenState extends ConsumerState<MailBoxScreen> {
                       children: [
                         Column(
                           children: [
-                            if (connectedTelepathySwitch == true)
-                              ConnectedTelepathyBoxes(
-                                sentTelepathies: telepathyInfo["sentTelepathy"],
-                                receivedTelepathies:
-                                    telepathyInfo["receivedTelepathy"],
-                              ),
-                            if (messageSwitch == true)
-                              SentTelepathyBoxes(
-                                  sentTelepathies:
-                                      telepathyInfo["sentTelepathy"]),
-                            if (messageSwitch == false)
-                              //  텍스트 필드. 텍스트필드에 controller를 등록하여 리스너를 통한 핸들링
-                              ReceivedTelepathyBoxes(
-                                receivedTelepathies:
-                                    telepathyInfo["receivedTelepathy"],
-                              ),
+                            // if (messageSwitch == true)
+                            //   SentTelepathyBoxes(
+                            //       sentTelepathies:
+                            //           telepathyInfo["sentTelepathy"]),
+                            // if (messageSwitch == false)
+                            //   //  텍스트 필드. 텍스트필드에 controller를 등록하여 리스너를 통한 핸들링
+                            //   ReceivedTelepathyBoxes(
+                            //     receivedTelepathies:
+                            //         telepathyInfo["receivedTelepathy"],
+                            //   ),
+                            NewSentTelepathyBoxes(
+                              sentTelepathies: telepathyInfo["sentTelepathy"],
+                              receivedTelepathies:
+                                  telepathyInfo["receivedTelepathy"],
+                            )
                           ],
                         ),
                       ]),
@@ -342,7 +342,7 @@ class MessageContainer extends StatelessWidget {
     super.key,
     required this.text,
     required this.phoneNumber,
-    required this.connected,
+    this.connected = false,
     this.received = false,
   });
   final text;
@@ -356,11 +356,7 @@ class MessageContainer extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
         border: Border.all(
-          color: connected
-              ? Color(0xffF0E455)
-              : received
-                  ? Color(0xff2F3E48)
-                  : Color(0xff72D4A5),
+          color: connected ? Color(0xff72D4A5) : Color(0xff2F3E48),
           width: 5,
         ),
         borderRadius: BorderRadius.circular(10),
@@ -368,32 +364,207 @@ class MessageContainer extends StatelessWidget {
       ),
       width: MediaQuery.of(context).size.width,
       height: 80,
-      child: Padding(
-        padding:
-            const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text(
-              received ? "미지의 행성 B" : "$phoneNumber",
-              style: TextStyle(
-                  fontFamily: "neodgm",
-                  color: received ? Color(0xff2F3E48) : Color(0xff72D4A5),
-                  fontSize: 14),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  received ? "미지의 행성 B" : "$phoneNumber",
+                  style: TextStyle(
+                      fontFamily: "neodgm",
+                      color: connected ? Color(0xff72D4A5) : Color(0xff2F3E48),
+                      fontSize: 14),
+                ),
+                Text(
+                  received ? "교신대기 중인 텔레파시입니다." : "$text",
+                  style: TextStyle(
+                      fontFamily: "neodgm",
+                      color: connected ? Color(0xff72D4A5) : Color(0xff2F3E48),
+                      fontSize: 16),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                )
+              ],
             ),
-            Text(
-              received ? "교신대기 중인 텔레파시입니다." : "$text",
-              style: TextStyle(
-                  fontFamily: "neodgm",
-                  color: received ? Color(0xff2F3E48) : Color(0xff72D4A5),
-                  fontSize: 16),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            )
-          ],
-        ),
+          ),
+          //오른쪽 빨간색 표시등
+          if (connected == true)
+            Container(height: 20, width: 8, color: Color(0xffEF366D))
+        ],
       ),
+    );
+  }
+}
+
+//메시지 박스 위젯
+class NewMessageContainer extends StatelessWidget {
+  const NewMessageContainer({
+    super.key,
+    required this.text,
+    required this.phoneNumber,
+    required this.type,
+    this.connected = false,
+  });
+  final text;
+  final phoneNumber;
+  final connected;
+  final type;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 20),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: connected ? Color(0xff72D4A5) : Color(0xff2F3E48),
+          width: 5,
+        ),
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey[900],
+      ),
+      width: MediaQuery.of(context).size.width,
+      height: 80,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  type == "received" ? "미지의 행성 B" : "$phoneNumber",
+                  style: TextStyle(
+                      fontFamily: "neodgm",
+                      color: connected ? Color(0xff72D4A5) : Color(0xff2F3E48),
+                      fontSize: 14),
+                ),
+                Text(
+                  type == "received" ? "교신대기 중인 텔레파시입니다." : "$text",
+                  style: TextStyle(
+                      fontFamily: "neodgm",
+                      color: connected ? Color(0xff72D4A5) : Color(0xff2F3E48),
+                      fontSize: 16),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                )
+              ],
+            ),
+          ),
+          //오른쪽 빨간색 표시등
+          if (connected == true)
+            Container(height: 20, width: 8, color: Color(0xffEF366D))
+        ],
+      ),
+    );
+  }
+}
+
+class NewSentTelepathyBoxes extends ConsumerWidget {
+  final List sentTelepathies;
+  final List receivedTelepathies;
+  const NewSentTelepathyBoxes({
+    super.key,
+    required this.sentTelepathies,
+    required this.receivedTelepathies,
+  });
+
+  // print("sentTelepathyNumberList $sentTelepathyNumberList");
+
+  NewMessageContainer makeMessageContainer({
+    required sentTelepathy,
+  }) {
+    String phoneNumber = "";
+    String text = "";
+    bool connected = false;
+
+    sentTelepathy.forEach((k, v) {
+      phoneNumber = k;
+      text = v["text"];
+      connected = v['connected'];
+    });
+
+    return NewMessageContainer(
+      text: text,
+      phoneNumber: phoneNumber,
+      connected: connected,
+      type: "sent",
+    );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    List receivedTelepathyNumberList = [];
+    List finalTelepathyResult = [];
+    // 연결이 된 것을 찾는 로직
+    for (var receivedTelepathy in receivedTelepathies) {
+      receivedTelepathy.keys.forEach((phoneNumber) {
+        receivedTelepathyNumberList.add(phoneNumber);
+      });
+    }
+    for (var sentTelepathy in sentTelepathies) {
+      sentTelepathy.forEach((phoneNumber, text) {
+        if (receivedTelepathyNumberList.contains(phoneNumber) == true) {
+          finalTelepathyResult.add({
+            "$phoneNumber": {"connected": true, "text": text}
+          });
+        } else {
+          finalTelepathyResult.add({
+            "$phoneNumber": {"connected": false, "text": text}
+          });
+        }
+      });
+    }
+
+    return Column(
+      children: [
+        for (var sentTelepathy in finalTelepathyResult)
+          makeMessageContainer(sentTelepathy: sentTelepathy)
+      ],
+    );
+  }
+}
+
+class NewReceivedTelepathyBoxes extends StatelessWidget {
+  final List receivedTelepathies;
+  const NewReceivedTelepathyBoxes({
+    super.key,
+    required this.receivedTelepathies,
+  });
+
+  NewMessageContainer makeMessageContainer(receivedTelepathy) {
+    String phoneNumber = "";
+    String text = "";
+
+    receivedTelepathy.forEach((k, v) {
+      phoneNumber = k;
+      text = v;
+    });
+    return NewMessageContainer(
+      text: text,
+      phoneNumber: phoneNumber,
+      connected: false,
+      type: "received",
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (var receivedTelepathy in receivedTelepathies)
+          makeMessageContainer(receivedTelepathy)
+      ],
     );
   }
 }
