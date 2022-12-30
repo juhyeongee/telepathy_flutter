@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -319,6 +321,7 @@ class ReceivedTelepathyBoxes extends StatelessWidget {
       text: text,
       phoneNumber: phoneNumber,
       connected: false,
+      received: true,
     );
   }
 
@@ -340,10 +343,12 @@ class MessageContainer extends StatelessWidget {
     required this.text,
     required this.phoneNumber,
     required this.connected,
+    this.received = false,
   });
   final text;
   final phoneNumber;
   final connected;
+  final received;
 
   @override
   Widget build(BuildContext context) {
@@ -351,7 +356,11 @@ class MessageContainer extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
         border: Border.all(
-          color: connected ? Color(0xffF0E455) : Color(0xff72D4A5),
+          color: connected
+              ? Color(0xffF0E455)
+              : received
+                  ? Color(0xff2F3E48)
+                  : Color(0xff72D4A5),
           width: 5,
         ),
         borderRadius: BorderRadius.circular(10),
@@ -367,14 +376,18 @@ class MessageContainer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
-              "$phoneNumber",
+              received ? "미지의 행성 B" : "$phoneNumber",
               style: TextStyle(
-                  fontFamily: "neodgm", color: Color(0xff72D4A5), fontSize: 14),
+                  fontFamily: "neodgm",
+                  color: received ? Color(0xff2F3E48) : Color(0xff72D4A5),
+                  fontSize: 14),
             ),
             Text(
-              "$text",
+              received ? "교신대기 중인 텔레파시입니다." : "$text",
               style: TextStyle(
-                  fontFamily: "neodgm", color: Color(0xff72D4A5), fontSize: 16),
+                  fontFamily: "neodgm",
+                  color: received ? Color(0xff2F3E48) : Color(0xff72D4A5),
+                  fontSize: 16),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
             )
