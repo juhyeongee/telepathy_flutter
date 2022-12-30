@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -22,13 +24,39 @@ class _LoginScreenState extends State<LoginScreen> {
   final viewModel = MainViewModel(KakaoLogin());
   final firestore = FirebaseFirestore.instance;
 
-  final nameTextController = TextEditingController();
-  final phoneNumberTextController = TextEditingController();
+  late TextEditingController nameTextController;
+  late TextEditingController phoneNumberTextController;
 
-  getData() async {
-    var result = await firestore.collection('example').doc("exampleDocs").get();
-    print(result);
-    return result;
+  // getData() async {
+  //   var result = await firestore.collection('example').doc("exampleDocs").get();
+  //   print(result);
+  //   return result;
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+    nameTextController = TextEditingController();
+    phoneNumberTextController = TextEditingController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getTempSavedSignIn();
+    });
+  }
+
+  getTempSavedSignIn() async {
+    //read 함수를 통하여 key값에 맞는 정보를 불러오게 됩니다. 이때 불러오는 결과의 타입은 String 타입임을 기억해야 합니다.
+    //(데이터가 없을때는 null을 반환을 합니다.)
+    String? userInfo = await _storage.read(key: "TempSavedSignIn");
+    print(userInfo);
+
+    //user의 정보가 있다면 바로 로그아웃 페이지로 넝어가게 합니다.
+    if (userInfo != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const IntroScreen()),
+      );
+    }
   }
 
   //같은 doc으로 보내면, 초기화가 됨
@@ -51,10 +79,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> SignIn() async {
-    /// 파베로부터 전화번호를 가져와 중복이 있는 확인
-    /// 중복이라면 에러 반환
-    /// 아니라면 파베 저장
-    /// secure-store에 저장(자동 로그인) -> TODO: 로그인 스크린 넘어오기 전에 메인에서 자동 로그인 하도록 구현하기
     try {
       DocumentSnapshot user = await firestore
           .collection("user")
@@ -74,6 +98,11 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       }
 
+      addTempSavedSignIn(
+        name: nameTextController.text,
+        phoneNum: phoneNumberTextController.text,
+      );
+
       Fluttertoast.showToast(
           msg: "교신 시작합니다",
           toastLength: Toast.LENGTH_LONG,
@@ -84,8 +113,19 @@ class _LoginScreenState extends State<LoginScreen> {
           fontSize: 18.0);
       Navigator.pop(context);
     } catch (err) {
-      print("validateLogin err: $err");
+      print("signIn input err: $err");
     }
+  }
+
+  Future<void> addTempSavedSignIn({
+    required name,
+    required phoneNum,
+  }) async {
+    final encodedValue = jsonEncode({"$name": "$phoneNum"});
+    await _storage.write(key: "TempSavedSignIn", value: encodedValue);
+    print("로그인 정보 저장 완료");
+    String? tempSavedText = await _storage.read(key: "TempSavedSignIn");
+    print("$tempSavedText");
   }
 
   @override
