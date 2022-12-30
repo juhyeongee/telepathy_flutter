@@ -156,7 +156,6 @@ class _MailBoxScreenState extends ConsumerState<MailBoxScreen> {
                       children: [
                         Column(
                           children: [
-                            // if (messageSwitch == true)
                             //   SentTelepathyBoxes(
                             //       sentTelepathies:
                             //           telepathyInfo["sentTelepathy"]),
@@ -166,11 +165,18 @@ class _MailBoxScreenState extends ConsumerState<MailBoxScreen> {
                             //     receivedTelepathies:
                             //         telepathyInfo["receivedTelepathy"],
                             //   ),
-                            NewSentTelepathyBoxes(
-                              sentTelepathies: telepathyInfo["sentTelepathy"],
-                              receivedTelepathies:
-                                  telepathyInfo["receivedTelepathy"],
-                            )
+                            if (messageSwitch == false)
+                              NewReceivedTelepathyBoxes(
+                                  receivedTelepathies:
+                                      telepathyInfo["receivedTelepathy"],
+                                  sentTelepathies:
+                                      telepathyInfo["sentTelepathy"]),
+                            if (messageSwitch == true)
+                              NewSentTelepathyBoxes(
+                                sentTelepathies: telepathyInfo["sentTelepathy"],
+                                receivedTelepathies:
+                                    telepathyInfo["receivedTelepathy"],
+                              )
                           ],
                         ),
                       ]),
@@ -209,199 +215,9 @@ class _MailBoxScreenState extends ConsumerState<MailBoxScreen> {
   }
 }
 
-//연결된 텔레파시들
-
-class ConnectedTelepathyBoxes extends StatelessWidget {
-  final List sentTelepathies;
-  final List receivedTelepathies;
-
-  ConnectedTelepathyBoxes({
-    super.key,
-    required this.sentTelepathies,
-    required this.receivedTelepathies,
-  });
-
-  List searchConnectNumber() {
-    List sentTelepathyNumberList = [];
-    List result = [];
-    for (var sentTelepathy in sentTelepathies) {
-      sentTelepathy.keys.forEach((phoneNumber) {
-        sentTelepathyNumberList.add(phoneNumber);
-      });
-      // print("각각 sentTelepathy $sentTelepathy");
-    }
-
-    for (var receivedTelepathy in receivedTelepathies) {
-      // print("각각 receivedTelepathy $receivedTelepathy");
-      receivedTelepathy.forEach((phoneNumber, text) {
-        if (sentTelepathyNumberList.contains(phoneNumber) == true) {
-          result.add({"$phoneNumber": '$text'});
-        }
-      });
-    }
-    // print("sentTelepathyNumberList $sentTelepathyNumberList");
-    return result;
-  }
-
-  MessageContainer makeMessageContainer(sortedResultTelepathy) {
-    String phoneNumber = "";
-    String text = "";
-
-    sortedResultTelepathy.forEach((k, v) {
-      phoneNumber = k;
-      text = v;
-    });
-    return MessageContainer(
-      text: text,
-      phoneNumber: phoneNumber,
-      connected: true,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final List sortedResultTelepathies = searchConnectNumber();
-
-    return Column(
-      children: [
-        for (var sortedResultTelepathy in sortedResultTelepathies)
-          makeMessageContainer(sortedResultTelepathy)
-      ],
-    );
-  }
-}
-
 //보낸 메세지들
 
-class SentTelepathyBoxes extends ConsumerWidget {
-  final List sentTelepathies;
-  const SentTelepathyBoxes({super.key, required this.sentTelepathies});
-
-  MessageContainer makeMessageContainer(sentTelepathy) {
-    String phoneNumber = "";
-    String text = "";
-
-    sentTelepathy.forEach((k, v) {
-      phoneNumber = k;
-      text = v;
-    });
-    return MessageContainer(
-      text: text,
-      phoneNumber: phoneNumber,
-      connected: false,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        for (var sentTelepathy in sentTelepathies)
-          makeMessageContainer(sentTelepathy)
-      ],
-    );
-  }
-}
-
 //받은 메세지들
-
-class ReceivedTelepathyBoxes extends StatelessWidget {
-  final List receivedTelepathies;
-  const ReceivedTelepathyBoxes({super.key, required this.receivedTelepathies});
-
-  MessageContainer makeMessageContainer(receivedTelepathy) {
-    String phoneNumber = "";
-    String text = "";
-
-    receivedTelepathy.forEach((k, v) {
-      phoneNumber = k;
-      text = v;
-    });
-    return MessageContainer(
-      text: text,
-      phoneNumber: phoneNumber,
-      connected: false,
-      received: true,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        for (var receivedTelepathy in receivedTelepathies)
-          makeMessageContainer(receivedTelepathy)
-      ],
-    );
-  }
-}
-
-//메시지 박스 위젯
-class MessageContainer extends StatelessWidget {
-  const MessageContainer({
-    super.key,
-    required this.text,
-    required this.phoneNumber,
-    this.connected = false,
-    this.received = false,
-  });
-  final text;
-  final phoneNumber;
-  final connected;
-  final received;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: connected ? Color(0xff72D4A5) : Color(0xff2F3E48),
-          width: 5,
-        ),
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.grey[900],
-      ),
-      width: MediaQuery.of(context).size.width,
-      height: 80,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  received ? "미지의 행성 B" : "$phoneNumber",
-                  style: TextStyle(
-                      fontFamily: "neodgm",
-                      color: connected ? Color(0xff72D4A5) : Color(0xff2F3E48),
-                      fontSize: 14),
-                ),
-                Text(
-                  received ? "교신대기 중인 텔레파시입니다." : "$text",
-                  style: TextStyle(
-                      fontFamily: "neodgm",
-                      color: connected ? Color(0xff72D4A5) : Color(0xff2F3E48),
-                      fontSize: 16),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                )
-              ],
-            ),
-          ),
-          //오른쪽 빨간색 표시등
-          if (connected == true)
-            Container(height: 20, width: 8, color: Color(0xffEF366D))
-        ],
-      ),
-    );
-  }
-}
 
 //메시지 박스 위젯
 class NewMessageContainer extends StatelessWidget {
@@ -535,35 +351,66 @@ class NewSentTelepathyBoxes extends ConsumerWidget {
   }
 }
 
-class NewReceivedTelepathyBoxes extends StatelessWidget {
+class NewReceivedTelepathyBoxes extends ConsumerWidget {
+  final List sentTelepathies;
   final List receivedTelepathies;
   const NewReceivedTelepathyBoxes({
     super.key,
+    required this.sentTelepathies,
     required this.receivedTelepathies,
   });
 
-  NewMessageContainer makeMessageContainer(receivedTelepathy) {
+  // print("sentTelepathyNumberList $sentTelepathyNumberList");
+
+  NewMessageContainer makeMessageContainer({
+    required recievedTelepathy,
+  }) {
     String phoneNumber = "";
     String text = "";
+    bool connected = false;
 
-    receivedTelepathy.forEach((k, v) {
+    recievedTelepathy.forEach((k, v) {
       phoneNumber = k;
-      text = v;
+      text = v["text"];
+      connected = v['connected'];
     });
+
     return NewMessageContainer(
       text: text,
       phoneNumber: phoneNumber,
-      connected: false,
-      type: "received",
+      connected: connected,
+      type: "recieved",
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    List receivedTelepathyNumberList = [];
+    List finalTelepathyResult = [];
+    // 연결이 된 것을 찾는 로직
+    for (var sentTelepathy in sentTelepathies) {
+      sentTelepathy.keys.forEach((phoneNumber) {
+        receivedTelepathyNumberList.add(phoneNumber);
+      });
+    }
+    for (var receivedTelepathy in receivedTelepathies) {
+      receivedTelepathy.forEach((phoneNumber, text) {
+        if (receivedTelepathyNumberList.contains(phoneNumber) == true) {
+          finalTelepathyResult.add({
+            "$phoneNumber": {"connected": true, "text": text}
+          });
+        } else {
+          finalTelepathyResult.add({
+            "$phoneNumber": {"connected": false, "text": text}
+          });
+        }
+      });
+    }
+
     return Column(
       children: [
-        for (var receivedTelepathy in receivedTelepathies)
-          makeMessageContainer(receivedTelepathy)
+        for (var recievedTelepathy in finalTelepathyResult)
+          makeMessageContainer(recievedTelepathy: recievedTelepathy)
       ],
     );
   }
