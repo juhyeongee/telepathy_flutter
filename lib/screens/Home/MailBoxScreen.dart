@@ -1,18 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:telepathy_flutter/screens/Home/WritingMessageScreen.dart';
+
+import 'HomeProvider.dart';
 
 final firestore = FirebaseFirestore.instance;
 
-class MailBoxScreen extends StatefulWidget {
-  final telepathyInfo;
-  const MailBoxScreen({super.key, required this.telepathyInfo});
+class MailBoxScreen extends ConsumerStatefulWidget {
+  const MailBoxScreen({super.key});
 
   @override
-  State<MailBoxScreen> createState() => _MailBoxScreenState();
+  ConsumerState<MailBoxScreen> createState() => _MailBoxScreenState();
 }
 
-class _MailBoxScreenState extends State<MailBoxScreen> {
+class _MailBoxScreenState extends ConsumerState<MailBoxScreen> {
   bool messageSwitch = false;
   bool connectedTelepathySwitch = false;
 
@@ -34,7 +36,14 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.telepathyInfo == {}) {
+    final telepathyInfo = ref.watch(telepathyInfoProvider);
+
+    Future<void> refresh() async {
+      ref.read(telepathyInfoProvider.notifier).initializeTelepathyInfo();
+      setState(() {});
+    }
+
+    if (telepathyInfo == {}) {
       return CircularProgressIndicator();
     }
 
@@ -136,28 +145,32 @@ class _MailBoxScreenState extends State<MailBoxScreen> {
               //BODY
               Expanded(
                 flex: 12,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      if (connectedTelepathySwitch == true)
-                        ConnectedTelepathyBoxes(
-                          sentTelepathies:
-                              widget.telepathyInfo["sentTelepathy"],
-                          receivedTelepathies:
-                              widget.telepathyInfo["receivedTelepathy"],
+                child: RefreshIndicator(
+                  onRefresh: refresh,
+                  child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: [
+                        Column(
+                          children: [
+                            if (connectedTelepathySwitch == true)
+                              ConnectedTelepathyBoxes(
+                                sentTelepathies: telepathyInfo["sentTelepathy"],
+                                receivedTelepathies:
+                                    telepathyInfo["receivedTelepathy"],
+                              ),
+                            if (messageSwitch == true)
+                              SentTelepathyBoxes(
+                                  sentTelepathies:
+                                      telepathyInfo["sentTelepathy"]),
+                            if (messageSwitch == false)
+                              //  텍스트 필드. 텍스트필드에 controller를 등록하여 리스너를 통한 핸들링
+                              ReceivedTelepathyBoxes(
+                                receivedTelepathies:
+                                    telepathyInfo["receivedTelepathy"],
+                              ),
+                          ],
                         ),
-                      if (messageSwitch == true)
-                        SentTelepathyBoxes(
-                            sentTelepathies:
-                                widget.telepathyInfo["sentTelepathy"]),
-                      if (messageSwitch == false)
-                        //  텍스트 필드. 텍스트필드에 controller를 등록하여 리스너를 통한 핸들링
-                        ReceivedTelepathyBoxes(
-                          receivedTelepathies:
-                              widget.telepathyInfo["receivedTelepathy"],
-                        ),
-                    ],
-                  ),
+                      ]),
                 ),
               ),
 
@@ -257,7 +270,7 @@ class ConnectedTelepathyBoxes extends StatelessWidget {
 
 //보낸 메세지들
 
-class SentTelepathyBoxes extends StatelessWidget {
+class SentTelepathyBoxes extends ConsumerWidget {
   final List sentTelepathies;
   const SentTelepathyBoxes({super.key, required this.sentTelepathies});
 
@@ -277,7 +290,7 @@ class SentTelepathyBoxes extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         for (var sentTelepathy in sentTelepathies)

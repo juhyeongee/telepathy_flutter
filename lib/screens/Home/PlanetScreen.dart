@@ -50,8 +50,7 @@ class PlanetScreen extends ConsumerWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MailBoxScreen(
-                                    telepathyInfo: telepathyInfos)));
+                                builder: (context) => MailBoxScreen()));
                       },
                       child: SizedBox(
                         height: 130,
