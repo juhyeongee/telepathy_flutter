@@ -40,6 +40,7 @@ class _MailBoxScreenState extends ConsumerState<MailBoxScreen> {
 
     Future<void> refresh() async {
       ref.read(telepathyInfoProvider.notifier).initializeTelepathyInfo();
+      print("initializeTelepathyInfo read 완료");
       setState(() {});
     }
 

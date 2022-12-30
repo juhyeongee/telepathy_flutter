@@ -48,6 +48,9 @@ Future<List> getMyReceivedTelepathyList() async {
     myReceivedTelepathyList.add({'${doc["targetPhoneNum"]}': doc["body"]});
     // mySentMessageMap['${doc["targetPhoneNum"]}'] = doc["body"];
   });
+
+  print("getMyReceivedTelepathyList 실행완료");
+
   return myReceivedTelepathyList;
 }
 
@@ -97,6 +100,7 @@ Future<List> getMySentTelepathyList() async {
   // Map<String, dynamic> converted = jsonDecode(jsonEncode(result.data()));
   // String messageBody = converted['body'];
   // print("mySentMessageList $result");
+  print("getMySentTelepathyList 실행완료");
 
   return mySentTelepathyList;
 }
