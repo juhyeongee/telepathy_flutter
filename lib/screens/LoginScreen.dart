@@ -27,41 +27,29 @@ class _LoginScreenState extends State<LoginScreen> {
   late TextEditingController nameTextController;
   late TextEditingController phoneNumberTextController;
 
-  // getData() async {
-  //   var result = await firestore.collection('example').doc("exampleDocs").get();
-  //   print(result);
-  //   return result;
-  // }
-
   @override
   void initState() {
     super.initState();
     nameTextController = TextEditingController();
     phoneNumberTextController = TextEditingController();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      getTempSavedSignIn();
+    /// 저장되어있는 유저정보가 있다면 인트로페이지로 갑니다
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      String? userInfo = await _storage.read(key: "UserSignInData");
+      print(userInfo);
+
+      if (userInfo != null) {
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const IntroScreen()),
+        );
+      }
     });
   }
 
-  getTempSavedSignIn() async {
-    //read 함수를 통하여 key값에 맞는 정보를 불러오게 됩니다. 이때 불러오는 결과의 타입은 String 타입임을 기억해야 합니다.
-    //(데이터가 없을때는 null을 반환을 합니다.)
-    String? userInfo = await _storage.read(key: "TempSavedSignIn");
-    print(userInfo);
-
-    //user의 정보가 있다면 바로 로그아웃 페이지로 넝어가게 합니다.
-    if (userInfo != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const IntroScreen()),
-      );
-    }
-  }
-
-  //같은 doc으로 보내면, 초기화가 됨
+  /// 입력 정보가 올바른지 불린을 응답합니다.
   bool isValidInput() {
-    // TODO: 벨리데이션 함수로 분리 필요
     if (phoneNumberTextController.text.length != 11 ||
         phoneNumberTextController.text.substring(0, 3) != "010") {
       print(phoneNumberTextController.text);
@@ -69,12 +57,12 @@ class _LoginScreenState extends State<LoginScreen> {
       return false;
     }
     // if (phoneNumberTextController.text)
-    if (nameTextController.text.length == 0) {
+    if (nameTextController.text.isEmpty) {
       print(nameTextController.text);
       print("이름이 비어있습니다");
       return false;
     }
-    print("이름, 번호 유효성 확인!");
+    print("이름, 번호 유효성 확인완료!");
     return true;
   }
 
@@ -98,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       }
 
-      addTempSavedSignIn(
+      addUserSignInData(
         name: nameTextController.text,
         phoneNum: phoneNumberTextController.text,
       );
@@ -117,15 +105,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> addTempSavedSignIn({
+  Future<void> addUserSignInData({
     required name,
     required phoneNum,
   }) async {
     final encodedValue = jsonEncode({"$name": "$phoneNum"});
-    await _storage.write(key: "TempSavedSignIn", value: encodedValue);
+    await _storage.write(key: "UserSignInData", value: encodedValue);
     print("로그인 정보 저장 완료");
-    String? tempSavedText = await _storage.read(key: "TempSavedSignIn");
-    print("$tempSavedText");
   }
 
   @override
@@ -212,6 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: () async {
                             if (isValidInput()) {
                               await SignIn();
+                              // ignore: use_build_context_synchronously
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -230,6 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ]
                 // 새 로비화면 end
+                //
                 // 기존 로비화면
                 // children: [
                 //   Column(
