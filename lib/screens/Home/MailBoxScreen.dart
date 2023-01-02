@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:intl/intl.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -226,12 +227,14 @@ class NewMessageContainer extends StatelessWidget {
     required this.text,
     required this.phoneNumber,
     required this.type,
+    required this.sentTime,
     this.connected = false,
   });
   final text;
   final phoneNumber;
   final connected;
   final type;
+  final sentTime;
 
   @override
   Widget build(BuildContext context) {
@@ -258,12 +261,29 @@ class NewMessageContainer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text(
-                  type == "received" ? "미지의 행성 B" : "$phoneNumber",
-                  style: TextStyle(
-                      fontFamily: "neodgm",
-                      color: connected ? Color(0xff72D4A5) : Color(0xff2F3E48),
-                      fontSize: 14),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12.0),
+                      child: Text(
+                        type == "received" ? "미지의 행성 B" : "$phoneNumber",
+                        style: TextStyle(
+                            fontFamily: "neodgm",
+                            color: connected
+                                ? Color(0xff72D4A5)
+                                : Color(0xff2F3E48),
+                            fontSize: 14),
+                      ),
+                    ),
+                    Text(
+                      "${DateFormat('yyyy-MM-dd–kk:mm').format(DateTime.fromMillisecondsSinceEpoch(sentTime))}",
+                      style: TextStyle(
+                          fontFamily: "neodgm",
+                          color:
+                              connected ? Color(0xff72D4A5) : Color(0xff2F3E48),
+                          fontSize: 14),
+                    ),
+                  ],
                 ),
                 Text(
                   type == "received" ? "교신대기 중인 텔레파시입니다." : "$text",
@@ -303,11 +323,13 @@ class NewSentTelepathyBoxes extends ConsumerWidget {
     String phoneNumber = "";
     String text = "";
     bool connected = false;
+    int sentTime = 0;
 
     sentTelepathy.forEach((k, v) {
       phoneNumber = k;
       text = v["text"];
       connected = v['connected'];
+      sentTime = v['sentTime'];
     });
 
     return NewMessageContainer(
@@ -315,6 +337,7 @@ class NewSentTelepathyBoxes extends ConsumerWidget {
       phoneNumber: phoneNumber,
       connected: connected,
       type: "sent",
+      sentTime: sentTime,
     );
   }
 
@@ -329,14 +352,22 @@ class NewSentTelepathyBoxes extends ConsumerWidget {
       });
     }
     for (var sentTelepathy in sentTelepathies) {
-      sentTelepathy.forEach((phoneNumber, text) {
+      sentTelepathy.forEach((phoneNumber, value) {
         if (receivedTelepathyNumberList.contains(phoneNumber) == true) {
           finalTelepathyResult.add({
-            "$phoneNumber": {"connected": true, "text": text}
+            "$phoneNumber": {
+              "connected": true,
+              "text": value["text"],
+              "sentTime": value["sentTime"]
+            }
           });
         } else {
           finalTelepathyResult.add({
-            "$phoneNumber": {"connected": false, "text": text}
+            "$phoneNumber": {
+              "connected": false,
+              "text": value["text"],
+              "sentTime": value["sentTime"]
+            }
           });
         }
       });
@@ -368,11 +399,13 @@ class NewReceivedTelepathyBoxes extends ConsumerWidget {
     String phoneNumber = "";
     String text = "";
     bool connected = false;
+    int sentTime = 0;
 
     recievedTelepathy.forEach((k, v) {
       phoneNumber = k;
       text = v["text"];
       connected = v['connected'];
+      sentTime = v['sentTime'];
     });
 
     return NewMessageContainer(
@@ -380,9 +413,15 @@ class NewReceivedTelepathyBoxes extends ConsumerWidget {
       phoneNumber: phoneNumber,
       connected: connected,
       type: "recieved",
+      sentTime: sentTime,
     );
   }
 
+  //sentTelepathies 생김새
+// '${doc["targetPhoneNum"]}': {
+//         "text": doc["body"],
+//         "sentTime": doc["sentTime"]
+//       }
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List receivedTelepathyNumberList = [];
@@ -394,14 +433,22 @@ class NewReceivedTelepathyBoxes extends ConsumerWidget {
       });
     }
     for (var receivedTelepathy in receivedTelepathies) {
-      receivedTelepathy.forEach((phoneNumber, text) {
+      receivedTelepathy.forEach((phoneNumber, value) {
         if (receivedTelepathyNumberList.contains(phoneNumber) == true) {
           finalTelepathyResult.add({
-            "$phoneNumber": {"connected": true, "text": text}
+            "$phoneNumber": {
+              "connected": true,
+              "text": value["text"],
+              "sentTime": value["sentTime"]
+            }
           });
         } else {
           finalTelepathyResult.add({
-            "$phoneNumber": {"connected": false, "text": text}
+            "$phoneNumber": {
+              "connected": false,
+              "text": value["text"],
+              "sentTime": value["sentTime"]
+            }
           });
         }
       });

@@ -46,7 +46,12 @@ Future<List> getMyReceivedTelepathyList() async {
       .get();
 
   querySnapshot.docs.forEach((doc) {
-    myReceivedTelepathyList.add({'${doc["targetPhoneNum"]}': doc["body"]});
+    myReceivedTelepathyList.add({
+      '${doc["targetPhoneNum"]}': {
+        "text": doc["body"],
+        "sentTime": doc["sentTime"]
+      }
+    });
     // mySentMessageMap['${doc["targetPhoneNum"]}'] = doc["body"];
   });
 
@@ -93,7 +98,12 @@ Future<List> getMySentTelepathyList() async {
   List<QueryDocumentSnapshot> dataExample = querySnapshot.docs;
 
   querySnapshot.docs.forEach((doc) {
-    mySentTelepathyList.add({'${doc["targetPhoneNum"]}': doc["body"]});
+    mySentTelepathyList.add({
+      '${doc["targetPhoneNum"]}': {
+        "text": doc["body"],
+        "sentTime": doc["sentTime"]
+      }
+    });
     // mySentMessageMap['${doc["targetPhoneNum"]}'] = doc["body"];
   });
   print("mySentMessageList $mySentTelepathyList");

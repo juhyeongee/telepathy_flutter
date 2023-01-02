@@ -232,7 +232,8 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
             .doc(phoneNumberTextController.text)
             .set({
           "body": messageTextController.text,
-          "targetPhoneNum": phoneNumberTextController.text
+          "targetPhoneNum": phoneNumberTextController.text,
+          "sentTime": DateTime.now().millisecondsSinceEpoch
         });
         Fluttertoast.showToast(
             msg: "메세지가 전송되었습니다.",
