@@ -12,6 +12,7 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   static const int redColor = 0xffFF5B8C;
   static const int greenColor = 0xff72D4A5;
+  static const int boxBackColor = 0xff262630;
 
   @override
   void initState() {
@@ -51,103 +52,128 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   Column getTopColumn(String text, {int colorName = greenColor}) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Padding(
-        padding: const EdgeInsets.only(bottom: 20),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: Color(colorName),
-            fontFamily: "neodgm",
-            fontSize: 20,
-          ),
-        ),
-      ),
-      Container(
-        height: 2.0,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: Color.fromRGBO(57, 51, 77, 100),
-              width: 3,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: () {
+            print(text);
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: Text(
+              text,
+              style: TextStyle(
+                color: Color(colorName),
+                fontFamily: "neodgm",
+                fontSize: 20,
+              ),
             ),
           ),
         ),
+        Container(
+          height: 2.0,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Color.fromRGBO(57, 51, 77, 100),
+                width: 3,
+              ),
+            ),
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.only(bottom: 10),
+        ),
+      ],
+    );
+  }
+
+  GestureDetector getArrowRow(String text, [int colorName = greenColor]) {
+    return GestureDetector(
+      onTap: () {
+        print(text);
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            text,
+            style: TextStyle(
+              color: Color(colorName),
+              fontFamily: "neodgm",
+              fontSize: 20,
+            ),
+          ),
+          Icon(
+            Icons.navigate_next,
+            color: Color(colorName),
+            size: 30,
+          ),
+        ],
       ),
-      Padding(
-        padding: EdgeInsets.only(bottom: 10),
-      )
-    ]);
-  }
-
-  Row getArrowRow(String text, [int colorName = greenColor]) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          text,
-          style: TextStyle(
-            color: Color(colorName),
-            fontFamily: "neodgm",
-            fontSize: 20,
-          ),
-        ),
-        Icon(
-          Icons.navigate_next,
-          color: Color(colorName),
-          size: 30,
-        ),
-      ],
     );
   }
 
-  Row getAppVersionRow(String text, [int colorName = greenColor]) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          text,
-          style: TextStyle(
-            color: Color(colorName),
-            fontFamily: "neodgm",
-            fontSize: 20,
+  GestureDetector getAppVersionRow(String text, [int colorName = greenColor]) {
+    return GestureDetector(
+      onTap: () {
+        print(text);
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            text,
+            style: TextStyle(
+              color: Color(colorName),
+              fontFamily: "neodgm",
+              fontSize: 20,
+            ),
           ),
-        ),
-        Text(
-          "최신버전",
-          style: TextStyle(
-            color: Color(colorName),
-            fontFamily: "neodgm",
-            fontSize: 20,
+          Text(
+            "최신버전",
+            style: TextStyle(
+              color: Color(colorName),
+              fontFamily: "neodgm",
+              fontSize: 20,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Row getRow(String text, [int colorName = greenColor]) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          text,
-          style: TextStyle(
-            color: Color(colorName),
-            fontFamily: "neodgm",
-            fontSize: 20,
+  GestureDetector getRow(String text, [int colorName = greenColor]) {
+    return GestureDetector(
+      onTap: () {
+        print(text);
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            text,
+            style: TextStyle(
+              color: Color(colorName),
+              fontFamily: "neodgm",
+              fontSize: 20,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
+  /// TODO: 공지사항과 FAQ에 대한 로직확인 후 수정필요
   Container getBox(String title, String description,
-      [int colorName = greenColor]) {
+      [int colorName = greenColor, int backColorName = boxBackColor]) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 90,
       decoration: BoxDecoration(
+          color: Color(backColorName),
           border: Border.all(
             color: Color(colorName),
             width: 2.0,
@@ -181,17 +207,4 @@ class _SettingScreenState extends State<SettingScreen> {
       ),
     );
   }
-}
-
-class LinePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Color(0x0039334d)
-      ..strokeWidth = 1.0;
-    canvas.drawLine(Offset(0.0, 0.0), Offset(size.width, size.height), paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
