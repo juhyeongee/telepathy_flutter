@@ -6,58 +6,30 @@ import 'package:telepathy_flutter/global.dart' as globals;
 
 final firestore = FirebaseFirestore.instance;
 
-final telepathyInfoProvider =
+
+
+
+final telepathyRawDataProvider =
     StateNotifierProvider<TelepathyInfoNotifier, Map>((ref) {
   return TelepathyInfoNotifier();
 });
 
 class TelepathyInfoNotifier extends StateNotifier<Map> {
-  TelepathyInfoNotifier()
-      : super({"sentTelepathy": [], "receivedTelepathy": []}) {
+  TelepathyInfoNotifier() : super({}) {
     initializeTelepathyInfo();
     //constructor body 안에 함수를 넣음으로서 인스턴스 생성될 때 바로 실행이 되도록 한다.
   }
 
   void initializeTelepathyInfo() async {
-    final List sentTelepathy = await getMySentTelepathyList();
-    final List receivedTelepathy = await getMyReceivedTelepathyList();
-    final Map initResult = {
-      "sentTelepathy": sentTelepathy,
-      "receivedTelepathy": receivedTelepathy
-    };
-    print("initResult $initResult");
-    state = initResult;
+    int length;
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
+        .collection('messageData')
+        .doc(globals.MY_PHONE_NUM)
+        .get();
+    final data = snapshot.data();
+
+    state = data!;
   }
-}
-
-Future<List> getSuccessfulTelepathy() async {
-  //getMyReceivedMessage & getMySentMessageList 가 끝난 후에, 두 개의 캐싱된 값을 비교해서 세팅하는게 좋을 듯
-  //위의 두 함수도 한번만 실행되게 하는게 최 우선일 듯 함.
-  return [];
-}
-
-Future<List> getMyReceivedTelepathyList() async {
-  final List myReceivedTelepathyList = [];
-
-  QuerySnapshot querySnapshot = await firestore
-      .collection('messageData')
-      .doc(globals.MY_PHONE_NUM)
-      .collection("receivedMessage")
-      .get();
-
-  querySnapshot.docs.forEach((doc) {
-    myReceivedTelepathyList.add({
-      '${doc["targetPhoneNum"]}': {
-        "text": doc["body"],
-        "sentTime": doc["sentTime"]
-      }
-    });
-    // mySentMessageMap['${doc["targetPhoneNum"]}'] = doc["body"];
-  });
-
-  print("getMyReceivedTelepathyList 실행완료");
-
-  return myReceivedTelepathyList;
 }
 
 // Future<List> getMySentMessageList() async {

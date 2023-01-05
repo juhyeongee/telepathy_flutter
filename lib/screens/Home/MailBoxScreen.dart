@@ -39,10 +39,10 @@ class _MailBoxScreenState extends ConsumerState<MailBoxScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final telepathyInfo = ref.watch(telepathyInfoProvider);
+    final telepathyInfo = ref.watch(telepathyRawDataProvider);
 
     Future<void> refresh() async {
-      ref.read(telepathyInfoProvider.notifier).initializeTelepathyInfo();
+      ref.read(telepathyRawDataProvider.notifier).initializeTelepathyInfo();
       print("initializeTelepathyInfo read 완료");
       setState(() {});
     }

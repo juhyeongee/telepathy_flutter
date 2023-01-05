@@ -225,16 +225,26 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
       }
 
       try {
+        DocumentSnapshot<Map<String, dynamic>> snapshot =
+            await firestore.collection('messageData').doc("01011111111").get();
+        final data = snapshot.data();
         await firestore
             .collection("messageData")
-            .doc(globals.MY_PHONE_NUM)
-            .collection("sentMessage")
             .doc(phoneNumberTextController.text)
-            .set({
-          "body": messageTextController.text,
-          "targetPhoneNum": phoneNumberTextController.text,
-          "sentTime": DateTime.now().millisecondsSinceEpoch
-        });
+            .update(
+          {
+            "3": {
+              "body": {
+                "text": messageTextController.text,
+                "sentTime": DateTime.now().millisecondsSinceEpoch
+              },
+              "type": "received",
+              "targetPhoneNum": phoneNumberTextController.text,
+              "senderPhoneNum": globals.MY_PHONE_NUM,
+            }
+          },
+        );
+
         Fluttertoast.showToast(
             msg: "메세지가 전송되었습니다.",
             toastLength: Toast.LENGTH_LONG,
