@@ -55,19 +55,14 @@ class _SettingScreenState extends State<SettingScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
-          onTap: () {
-            print(text);
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Text(
-              text,
-              style: TextStyle(
-                color: Color(colorName),
-                fontFamily: "neodgm",
-                fontSize: 20,
-              ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Color(colorName),
+              fontFamily: "neodgm",
+              fontSize: 20,
             ),
           ),
         ),
