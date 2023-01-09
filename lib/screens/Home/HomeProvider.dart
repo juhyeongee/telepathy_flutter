@@ -6,9 +6,6 @@ import 'package:telepathy_flutter/global.dart' as globals;
 
 final firestore = FirebaseFirestore.instance;
 
-
-
-
 final telepathyRawDataProvider =
     StateNotifierProvider<TelepathyInfoNotifier, Map>((ref) {
   return TelepathyInfoNotifier();
@@ -18,6 +15,7 @@ class TelepathyInfoNotifier extends StateNotifier<Map> {
   TelepathyInfoNotifier() : super({}) {
     initializeTelepathyInfo();
     //constructor body 안에 함수를 넣음으로서 인스턴스 생성될 때 바로 실행이 되도록 한다.
+    // initState 에서 read로 해결
   }
 
   void initializeTelepathyInfo() async {
@@ -27,7 +25,7 @@ class TelepathyInfoNotifier extends StateNotifier<Map> {
         .doc(globals.MY_PHONE_NUM)
         .get();
     final data = snapshot.data();
-
+    print(data);
     state = data!;
   }
 }

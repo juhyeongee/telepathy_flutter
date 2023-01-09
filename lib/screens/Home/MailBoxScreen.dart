@@ -39,7 +39,7 @@ class _MailBoxScreenState extends ConsumerState<MailBoxScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final telepathyInfo = ref.watch(telepathyRawDataProvider);
+    // final telepathyInfo = ref.watch(telepathyRawDataProvider);
 
     Future<void> refresh() async {
       ref.read(telepathyRawDataProvider.notifier).initializeTelepathyInfo();
@@ -47,9 +47,9 @@ class _MailBoxScreenState extends ConsumerState<MailBoxScreen> {
       setState(() {});
     }
 
-    if (telepathyInfo == {}) {
-      return CircularProgressIndicator();
-    }
+    // if (telepathyInfo == {}) {
+    //   return CircularProgressIndicator();
+    // }
 
     return Scaffold(
       backgroundColor: Color(0xff1E1831),
@@ -166,18 +166,18 @@ class _MailBoxScreenState extends ConsumerState<MailBoxScreen> {
                             //     receivedTelepathies:
                             //         telepathyInfo["receivedTelepathy"],
                             //   ),
-                            if (messageSwitch == false)
-                              NewReceivedTelepathyBoxes(
-                                  receivedTelepathies:
-                                      telepathyInfo["receivedTelepathy"],
-                                  sentTelepathies:
-                                      telepathyInfo["sentTelepathy"]),
-                            if (messageSwitch == true)
-                              NewSentTelepathyBoxes(
-                                sentTelepathies: telepathyInfo["sentTelepathy"],
-                                receivedTelepathies:
-                                    telepathyInfo["receivedTelepathy"],
-                              )
+                            // if (messageSwitch == false)
+                            //   NewReceivedTelepathyBoxes(
+                            //       receivedTelepathies:
+                            //           telepathyInfo["receivedTelepathy"],
+                            //       sentTelepathies:
+                            //           telepathyInfo["sentTelepathy"]),
+                            // if (messageSwitch == true)
+                            //   NewSentTelepathyBoxes(
+                            //     sentTelepathies: telepathyInfo["sentTelepathy"],
+                            //     receivedTelepathies:
+                            //         telepathyInfo["receivedTelepathy"],
+                            //   )
                           ],
                         ),
                       ]),

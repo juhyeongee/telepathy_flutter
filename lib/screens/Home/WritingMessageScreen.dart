@@ -225,25 +225,37 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
       }
 
       try {
-        DocumentSnapshot<Map<String, dynamic>> snapshot =
-            await firestore.collection('messageData').doc("01011111111").get();
-        final data = snapshot.data();
-        await firestore
-            .collection("messageData")
+        DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
+            .collection('messageData')
             .doc(phoneNumberTextController.text)
-            .update(
-          {
-            "3": {
-              "body": {
-                "text": messageTextController.text,
-                "sentTime": DateTime.now().millisecondsSinceEpoch
-              },
-              "type": "received",
-              "targetPhoneNum": phoneNumberTextController.text,
-              "senderPhoneNum": globals.MY_PHONE_NUM,
-            }
-          },
-        );
+            .get();
+        final data = snapshot.data();
+        print(data);
+        final Map<String, dynamic> updateData = {
+          //메시지 번호는 안적으면 field위에 덮어씌워져서 말이지
+          "${data == null ? 1 : data.length + 1}": {
+            "body": {
+              "text": messageTextController.text,
+              "sentTime": DateTime.now().millisecondsSinceEpoch
+            },
+            "type": "received",
+            "targetPhoneNum": phoneNumberTextController.text,
+            "senderPhoneNum": globals.MY_PHONE_NUM,
+          }
+        };
+        if (data == null) {
+          await firestore
+              .collection("messageData")
+              .doc(phoneNumberTextController.text)
+              .set(updateData);
+        } else {
+          await firestore
+              .collection("messageData")
+              .doc(phoneNumberTextController.text)
+              .update(updateData);
+        }
+
+        // print(data!.length);
 
         Fluttertoast.showToast(
             msg: "메세지가 전송되었습니다.",
