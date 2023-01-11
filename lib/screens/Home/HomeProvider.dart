@@ -19,14 +19,23 @@ class TelepathyInfoNotifier extends StateNotifier<Map> {
   }
 
   void initializeTelepathyInfo() async {
-    int length;
-    DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
+    QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
         .collection('messageData')
         .doc(globals.MY_PHONE_NUM)
+        .collection('received')
         .get();
-    final data = snapshot.data();
-    print(data);
-    state = data!;
+    final data = snapshot.docs;
+    data.forEach(
+      (element) {
+        print(element);
+      },
+    );
+    print("init $data");
+    if (data == null) {
+      state = {};
+    } else {
+      state = {};
+    }
   }
 }
 

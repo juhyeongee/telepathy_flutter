@@ -228,31 +228,37 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
         DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
             .collection('messageData')
             .doc(phoneNumberTextController.text)
+            .collection('received')
+            .doc()
             .get();
         final data = snapshot.data();
-        print(data);
-        final Map<String, dynamic> updateData = {
-          //메시지 번호는 안적으면 field위에 덮어씌워져서 말이지
-          "${data == null ? 1 : data.length + 1}": {
-            "body": {
-              "text": messageTextController.text,
-              "sentTime": DateTime.now().millisecondsSinceEpoch
-            },
-            "type": "received",
-            "targetPhoneNum": phoneNumberTextController.text,
-            "senderPhoneNum": globals.MY_PHONE_NUM,
-          }
-        };
+
         if (data == null) {
+          final Map<String, dynamic> updateData = {
+            "text": messageTextController.text,
+            "sentTime": DateTime.now().millisecondsSinceEpoch,
+            "sender": phoneNumberTextController.text,
+          };
           await firestore
               .collection("messageData")
               .doc(phoneNumberTextController.text)
+              .collection("received")
+              .doc()
               .set(updateData);
-        } else {
+        }
+        //
+        else {
+          final Map<String, dynamic> updateData = {
+            "text": messageTextController.text,
+            "sentTime": DateTime.now().millisecondsSinceEpoch,
+            "sender": phoneNumberTextController.text,
+          };
           await firestore
               .collection("messageData")
               .doc(phoneNumberTextController.text)
-              .update(updateData);
+              .collection("received")
+              .doc()
+              .set(updateData);
         }
 
         // print(data!.length);
