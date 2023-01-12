@@ -9,7 +9,7 @@ class PlanetScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final telepathyInfos = ref.watch(telepathyRawDataProvider);
+    // final telepathyInfos = ref.watch(telepathyRawDataProvider);
 
     return Stack(
       children: [

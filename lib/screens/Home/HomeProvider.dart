@@ -6,36 +6,64 @@ import 'package:telepathy_flutter/global.dart' as globals;
 
 final firestore = FirebaseFirestore.instance;
 
-final telepathyRawDataProvider =
-    StateNotifierProvider<TelepathyInfoNotifier, Map>((ref) {
-  return TelepathyInfoNotifier();
+final receivedTelepathyProvider =
+    StateNotifierProvider<ReceivedTelepathyInfoNotifier, List>((ref) {
+  return ReceivedTelepathyInfoNotifier();
 });
 
-class TelepathyInfoNotifier extends StateNotifier<Map> {
-  TelepathyInfoNotifier() : super({}) {
-    initializeTelepathyInfo();
+class ReceivedTelepathyInfoNotifier extends StateNotifier<List> {
+  ReceivedTelepathyInfoNotifier() : super([]) {
+    initializeReceivedTelepathyInfo();
     //constructor body 안에 함수를 넣음으로서 인스턴스 생성될 때 바로 실행이 되도록 한다.
     // initState 에서 read로 해결
   }
 
-  void initializeTelepathyInfo() async {
+  void initializeReceivedTelepathyInfo() async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
         .collection('messageData')
         .doc(globals.MY_PHONE_NUM)
         .collection('received')
         .get();
-    final data = snapshot.docs;
-    data.forEach(
-      (element) {
-        print(element);
-      },
-    );
-    print("init $data");
-    if (data == null) {
-      state = {};
-    } else {
-      state = {};
+    List<QueryDocumentSnapshot> receviedData = snapshot.docs;
+    List result = [];
+    for (var eachData in receviedData) {
+      result.add(eachData.data());
+      print(result);
     }
+    result.sort((a, b) => b["sentTime"].compareTo(a["sentTime"]));
+    print(result);
+
+    state = result;
+  }
+}
+
+final sentTelepathyProvider =
+    StateNotifierProvider<SentTelepathyInfoNotifier, List>((ref) {
+  return SentTelepathyInfoNotifier();
+});
+
+class SentTelepathyInfoNotifier extends StateNotifier<List> {
+  SentTelepathyInfoNotifier() : super([]) {
+    initializeSentTelepathyInfo();
+    //constructor body 안에 함수를 넣음으로서 인스턴스 생성될 때 바로 실행이 되도록 한다.
+    // initState 에서 read로 해결
+  }
+
+  void initializeSentTelepathyInfo() async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
+        .collection('messageData')
+        .doc(globals.MY_PHONE_NUM)
+        .collection('sent')
+        .get();
+    List<QueryDocumentSnapshot> sentData = snapshot.docs;
+    List result = [];
+    for (var eachData in sentData) {
+      result.add(eachData.data());
+    }
+    result.sort((a, b) => b["sentTime"].compareTo(a["sentTime"]));
+    print("initializeSentTelepathyInfo $result");
+
+    state = result;
   }
 }
 

@@ -8,35 +8,27 @@ import 'package:telepathy_flutter/screens/Home/WritingMessageScreen.dart';
 
 import 'HomeProvider.dart';
 
-enum DataType {
-  text,
-  type,
-  sentTime,
-  senderPhoneNum,
-  targetPhoneNum,
-  received,
-  sent
-}
+enum DataType { text, type, sentTime, received, sent }
 
 final firestore = FirebaseFirestore.instance;
 
 /* 메세지 프로바이더~ */
 final messagesProvider = Provider<Map>((ref) {
-  final allTelepathyData = ref.watch(telepathyRawDataProvider);
+  final List receivedTelepathies = ref.watch(receivedTelepathyProvider);
+  final List sentTelepathies = ref.watch(sentTelepathyProvider);
+  final List receivedTelepathyList = [];
+  final List sentTelepathyList = [];
+//TODO: connected 로직 만들ㄷ기..
+  // for (Map receivedTele in receivedTelepathies) {
+  //   for(Map sentTele in sentTelepathies ){
+  //     if(receivedTele == )
 
-  List receivedTelepathyList = [];
-  List sentTelepathyList = [];
-  allTelepathyData.forEach((key, value) {
-    if (value["type"] == "received") {
-      receivedTelepathyList.add(value);
-    } else {
-      sentTelepathyList.add(value);
-    }
-  });
+  //   }
+  // }?
 
   return {
-    "receivedTelepathyList": receivedTelepathyList,
-    "sentTelepathyList": sentTelepathyList
+    "receivedTelepathyList": receivedTelepathies,
+    "sentTelepathyList": sentTelepathies
   };
 });
 
@@ -52,11 +44,12 @@ class _MailBoxScreenState extends ConsumerState<MailBoxScreen> {
   bool connectedTelepathySwitch = false;
 
   var myMessage = [];
-
+  @override
   void initState() {
     super.initState();
     messageSwitch = false;
-    ref.read(messagesProvider);
+    final a = ref.read(messagesProvider);
+    print("ref.read $a");
     // getMySentTelepathyList();
   }
 
@@ -73,8 +66,11 @@ class _MailBoxScreenState extends ConsumerState<MailBoxScreen> {
     final telepathyInfo = ref.watch(messagesProvider);
 
     Future<void> refresh() async {
-      ref.read(telepathyRawDataProvider.notifier).initializeTelepathyInfo();
-      print("initializeTelepathyInfo read 완료");
+      ref
+          .read(receivedTelepathyProvider.notifier)
+          .initializeReceivedTelepathyInfo();
+      ref.read(sentTelepathyProvider.notifier).initializeSentTelepathyInfo();
+
       setState(() {});
     }
 
@@ -197,15 +193,15 @@ class _MailBoxScreenState extends ConsumerState<MailBoxScreen> {
                             //     receivedTelepathies:
                             //         telepathyInfo["receivedTelepathy"],
                             //   ),
-                            // if (messageSwitch == false)
-                            //   NewReceivedTelepathyBoxes(
-                            //     receivedTelepathies:
-                            //         telepathyInfo["receivedTelepathyList"]!,
-                            //   ),
-                            // if (messageSwitch == true)
-                            //   NewSentTelepathyBoxes(
-                            //       sentTelepathies:
-                            //           telepathyInfo["sentTelepathyList"]!)
+                            if (messageSwitch == false)
+                              NewReceivedTelepathyBoxes(
+                                receivedTelepathies:
+                                    telepathyInfo["receivedTelepathyList"]!,
+                              ),
+                            if (messageSwitch == true)
+                              NewSentTelepathyBoxes(
+                                  sentTelepathies:
+                                      telepathyInfo["sentTelepathyList"]!)
                           ],
                         ),
                       ]),
@@ -251,14 +247,16 @@ class _MailBoxScreenState extends ConsumerState<MailBoxScreen> {
 //메시지 박스 위젯
 class NewMessageContainer extends StatelessWidget {
   final text;
-  final phoneNumber;
+  final sender;
+  final receiver;
   final connected;
   final DataType type;
   final sentTime;
   const NewMessageContainer({
     super.key,
     required this.text,
-    required this.phoneNumber,
+    required this.sender,
+    required this.receiver,
     required this.type,
     required this.sentTime,
     this.connected = false,
@@ -294,7 +292,7 @@ class NewMessageContainer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 12.0),
                       child: Text(
-                        type == DataType.received ? "미지의 행성 B" : "$phoneNumber",
+                        type == DataType.received ? "$receiver" : "$sender",
                         style: TextStyle(
                             fontFamily: "neodgm",
                             color: connected
@@ -304,8 +302,7 @@ class NewMessageContainer extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      // "${DateFormat('yyyy-MM-dd–kk:mm').format(DateTime.fromMillisecondsSinceEpoch(sentTime))}",
-                      "",
+                      "${DateFormat('yyyy-MM-dd–kk:mm').format(DateTime.fromMillisecondsSinceEpoch(sentTime))}",
                       style: TextStyle(
                           fontFamily: "neodgm",
                           color:
@@ -315,7 +312,7 @@ class NewMessageContainer extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  type == DataType.sent ? "교신대기 중인 텔레파시입니다." : "$text",
+                  connected ? "$text" : "교신대기 중인 텔레파시입니다.",
                   style: TextStyle(
                       fontFamily: "neodgm",
                       color: connected ? Color(0xff72D4A5) : Color(0xff2F3E48),
@@ -346,14 +343,13 @@ class NewSentTelepathyBoxes extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print("sentTelepathies $sentTelepathies");
-
     return Column(
       children: [
         for (var sentTelepathy in sentTelepathies)
           NewMessageContainer(
             text: sentTelepathy["text"],
-            phoneNumber: sentTelepathy["targetPhoneNum"],
+            sender: sentTelepathy["sender"],
+            receiver: sentTelepathy["receiver"],
             connected: true,
             type: DataType.sent,
             sentTime: sentTelepathy["sentTime"],
@@ -372,15 +368,13 @@ class NewReceivedTelepathyBoxes extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List finalTelepathyResult = [];
-    // 연결이 된 것을 찾는 로직
-    print("receivedTelepathies $receivedTelepathies");
     return Column(
       children: [
         for (var recievedTelepathy in receivedTelepathies)
           NewMessageContainer(
             text: recievedTelepathy["text"],
-            phoneNumber: recievedTelepathy["senderPhoneNum"],
+            sender: recievedTelepathy["sender"],
+            receiver: recievedTelepathy["receiver"],
             connected: true,
             type: DataType.received,
             sentTime: recievedTelepathy["sentTime"],
@@ -389,6 +383,5 @@ class NewReceivedTelepathyBoxes extends ConsumerWidget {
     );
   }
 }
-
 
 //아 ㄴ

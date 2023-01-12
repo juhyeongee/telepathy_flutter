@@ -225,52 +225,38 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
       }
 
       try {
-        DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
-            .collection('messageData')
+        // final DocumentSnapshot data = await firestore.collection("messageData").doc(globals.M);
+        final Map<String, dynamic> updateData = {
+          "text": messageTextController.text,
+          "sentTime": DateTime.now().millisecondsSinceEpoch,
+          "sender": globals.MY_PHONE_NUM,
+          "receiver": phoneNumberTextController.text
+        };
+        await firestore
+            .collection("messageData")
             .doc(phoneNumberTextController.text)
-            .collection('received')
+            .collection("received")
             .doc()
-            .get();
-        final data = snapshot.data();
+            .set(updateData);
 
-        if (data == null) {
-          final Map<String, dynamic> updateData = {
-            "text": messageTextController.text,
-            "sentTime": DateTime.now().millisecondsSinceEpoch,
-            "sender": phoneNumberTextController.text,
-          };
-          await firestore
-              .collection("messageData")
-              .doc(phoneNumberTextController.text)
-              .collection("received")
-              .doc()
-              .set(updateData);
-        }
-        //
-        else {
-          final Map<String, dynamic> updateData = {
-            "text": messageTextController.text,
-            "sentTime": DateTime.now().millisecondsSinceEpoch,
-            "sender": phoneNumberTextController.text,
-          };
-          await firestore
-              .collection("messageData")
-              .doc(phoneNumberTextController.text)
-              .collection("received")
-              .doc()
-              .set(updateData);
-        }
+        await firestore
+            .collection("messageData")
+            .doc(globals.MY_PHONE_NUM)
+            .collection("sent")
+            .doc()
+            .set(updateData);
 
         // print(data!.length);
 
         Fluttertoast.showToast(
-            msg: "메세지가 전송되었습니다.",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.black,
-            textColor: const Color(0xff72D4A5),
-            fontSize: 18.0);
+          msg: "메세지가 전송되었습니다.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: const Color(0xff72D4A5),
+          fontSize: 18.0,
+        );
         Navigator.pop(context);
       } catch (err) {
         print("updateMyNewMessage err: $err");
